@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as logger from 'morgan';
 import * as cors from 'cors';
-import { savesRouter } from './routes/saves';
+import { savesRouter, authRouter } from './routes';
 
 export const app = express();
 
@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/saves', savesRouter);
+app.use('/auth', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res) {
