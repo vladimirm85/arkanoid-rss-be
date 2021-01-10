@@ -2,16 +2,18 @@ import { v4 as uuid } from 'uuid';
 import { Router } from 'express';
 import * as storage from '../storage/mongo';
 
+const collectionName = 'saves';
+
 export const savesRouter = Router();
 
 savesRouter.get('/', async (req, res) => {
-  const list = await storage.listAll();
+  const list = await storage.listAll(collectionName);
 
   res.json(list);
 });
 
 savesRouter.get('/:id', async (req, res) => {
-  const item = await storage.getById(req.params['id']);
+  const item = await storage.getById(collectionName, req.params['id']);
 
   // prettier-ignore
   res
@@ -28,7 +30,7 @@ savesRouter.post('/', async (req, res) => {
 
   body.id = id;
 
-  const newBody = await storage.create(body);
+  const newBody = await storage.create(collectionName, body);
 
   res.json(newBody);
 });
@@ -36,7 +38,7 @@ savesRouter.post('/', async (req, res) => {
 savesRouter.put('/:id', async (req, res) => {
   const { body } = req;
 
-  const newBody = await storage.update({
+  const newBody = await storage.update(collectionName, {
     ...body,
     id: req.params['id'],
   });
@@ -45,7 +47,7 @@ savesRouter.put('/:id', async (req, res) => {
 });
 
 savesRouter.delete('/:id', async (req, res) => {
-  await storage.remove(req.params['id']);
+  await storage.remove(collectionName, req.params['id']);
 
   // prettier-ignore
   res
