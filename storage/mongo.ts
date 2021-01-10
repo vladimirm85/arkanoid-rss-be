@@ -1,7 +1,9 @@
 import { Collection, Db, MongoClient } from 'mongodb';
 import { ItemType } from '../types/item';
 
-const url = `mongodb+srv://vladimirm85:RMwDE9FDf3NeQFG@cluster0.gc0hm.mongodb.net/?retryWrites=true&w=majority`;
+const { MONGO_USERNAME, MONGO_PASSWORD, MONGO_HOST } = process.env;
+
+const url = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/?retryWrites=true&w=majority`;
 const dbName = 'arkanoid';
 const collectionName = 'saves';
 
