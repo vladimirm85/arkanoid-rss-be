@@ -1,31 +1,8 @@
-import { v4 as uuid } from 'uuid';
 import { Router } from 'express';
-import * as storage from '../storage/mongo';
-
-const collectionName = 'auth';
+import { login, register } from '../controllers';
 
 export const authRouter = Router();
 
-authRouter.post('/login', async (req, res) => {
-  const id = uuid();
+authRouter.post('/login', login);
 
-  const { body } = req;
-
-  body.id = id;
-
-  const newBody = await storage.create(collectionName, body);
-
-  res.json(newBody);
-});
-
-authRouter.post('/login', async (req, res) => {
-  const id = uuid();
-
-  const { body } = req;
-
-  body.id = id;
-
-  const newBody = await storage.create(collectionName, body);
-
-  res.json(newBody);
-});
+authRouter.post('/register', register);

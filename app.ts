@@ -1,9 +1,20 @@
 import * as express from 'express';
+import * as mongoose from 'mongoose';
 import * as logger from 'morgan';
 import * as cors from 'cors';
 import { savesRouter, authRouter } from './routes';
 
 export const app = express();
+
+const { MONGO_USERNAME, MONGO_PASSWORD, MONGO_HOST } = process.env;
+
+const url = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/arkanoid?retryWrites=true&w=majority`;
+
+mongoose.connect(url, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+});
 
 app.use(logger('dev'));
 app.use(cors());
