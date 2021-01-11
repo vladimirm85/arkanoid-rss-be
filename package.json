@@ -1,6 +1,7 @@
 {
   "name": "arkanoid-rss-be",
   "version": "0.0.0",
+  "author": "Mazhirin Vladimir",
   "private": true,
   "scripts": {
     "start": "node dist/bin/www.js",

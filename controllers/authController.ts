@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { UserModel, User } from '../models';
+import { errorHandler } from '../utils';
 
 export const login = async () => {};
 export const register = async (req: Request, res: Response): Promise<void | Response> => {
@@ -7,7 +8,7 @@ export const register = async (req: Request, res: Response): Promise<void | Resp
 
   const userCandidate = await UserModel.findOne({ email });
   if (userCandidate) {
-    return res.status(409).json({ message: `Sorry, email: ${email} has already been taken!` });
+    return errorHandler(res, 409, `Sorry, email: ${email} has already been taken!`);
   }
 
   const userData: User = {
