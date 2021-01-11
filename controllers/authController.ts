@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { UserModel, User } from '../models';
-import { errorHandler } from '../utils';
+import { errorHandler, successHandler, generateHash } from '../utils';
 
 export const login = async () => {};
 export const register = async (req: Request, res: Response): Promise<void | Response> => {
@@ -11,14 +11,20 @@ export const register = async (req: Request, res: Response): Promise<void | Resp
     return errorHandler(res, 409, `Sorry, email: ${email} has already been taken!`);
   }
 
+  const hashPassword = await generateHash(password);
+  if (!hashPassword) {
+    return errorHandler(res, 500, 'hashPassword was not generated');
+  }
+
   const userData: User = {
     email,
-    password,
+    password: hashPassword,
     createdAt: new Date(),
   };
 
   const user = await UserModel.create(userData);
 
   await user.save();
-  res.status(201).json(user);
+
+  successHandler(res, 201, user);
 };

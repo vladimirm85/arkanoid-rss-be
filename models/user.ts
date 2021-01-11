@@ -6,7 +6,7 @@ export interface User {
   createdAt: Date;
 }
 
-interface UserDocument extends User, Document {}
+export interface UserDocument extends User, Document {}
 interface UserModel extends User, Model<UserDocument> {}
 
 const UserSchema: Schema = new Schema({
