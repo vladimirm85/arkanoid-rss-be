@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
 import { v4 as uuid } from 'uuid';
-import { UserModel, UserInterface, VerKeyModel, VerKeyInterface } from '../models';
-import { userSchema } from '../validation';
-import { errorHandler, successHandler, generateHash, mailSend } from '../utils';
-
-export const login = async () => {};
+import { UserModel, UserInterface, VerKeyModel, VerKeyInterface } from '../../models';
+import { userRegisterSchema, userValidation } from '../../validation';
+import { errorHandler, successHandler, generateHash, mailSend } from '../../utils';
 
 export const register = async (req: Request, res: Response): Promise<void | Response> => {
   const { email, password } = req.body;
@@ -14,7 +12,12 @@ export const register = async (req: Request, res: Response): Promise<void | Resp
     return errorHandler(res, 409, `Sorry, email: ${email} has already been taken!`);
   }
 
-  const userValidateCandidate = userSchema.validate(req.body);
+  const isUserValid = userValidation(res, userRegisterSchema, req.body);
+  if (!isUserValid) {
+    return;
+  }
+
+  const userValidateCandidate = userRegisterSchema.validate(req.body);
   if (userValidateCandidate.error) {
     return errorHandler(
       res,

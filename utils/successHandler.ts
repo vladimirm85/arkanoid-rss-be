@@ -3,10 +3,10 @@ import { UserDocumentInterface } from '../models';
 
 export const successHandler = (
   res: Response,
-  errorCode: number,
-  document: UserDocumentInterface
+  code: number,
+  document: UserDocumentInterface | string
 ): Response =>
-  res.status(errorCode).json({
+  res.status(code).json({
     success: true,
     payload: document,
   });
