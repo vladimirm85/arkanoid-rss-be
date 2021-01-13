@@ -1,1 +1,2 @@
-export * from './user';
+export * from './UserModel';
+export * from './VerificationKeyModel';
