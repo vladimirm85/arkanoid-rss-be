@@ -1,8 +1,10 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
+import * as passport from 'passport';
 import * as logger from 'morgan';
 import * as cors from 'cors';
 import { savesRouter, authRouter } from './routes';
+import { createPassportJwt } from './middlewares';
 
 export const app = express();
 
@@ -15,6 +17,9 @@ mongoose.connect(url, {
   useCreateIndex: true,
   useUnifiedTopology: true,
 });
+
+app.use(passport.initialize());
+createPassportJwt(passport);
 
 app.use(logger('dev'));
 app.use(cors());

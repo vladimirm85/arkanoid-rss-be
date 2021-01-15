@@ -28,5 +28,5 @@ export const login = async (req: Request, res: Response): Promise<void | Respons
     errorHandler(res, 500, 'login: token was not created');
   }
 
-  return successHandler(res, 201, token);
+  return successHandler(res, 201, `Bearer ${token}`);
 };
