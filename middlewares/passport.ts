@@ -1,6 +1,6 @@
 import * as passportJwt from 'passport-jwt';
 import { PassportStatic } from 'passport';
-import { UserModel } from 'home/vladimir/work/arkanoid-rss-be/models';
+import { UserModel } from '../models';
 
 const { ExtractJwt, Strategy } = passportJwt;
 
@@ -9,7 +9,7 @@ const options = {
   secretOrKey: process.env.JWT_KEY,
 };
 
-export const createPassportJwt = (passport: PassportStatic) => {
+export const jwtRouteProtector = (passport: PassportStatic) => {
   passport.use(
     new Strategy(options, async (payload, done) => {
       try {

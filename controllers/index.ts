@@ -1,3 +1,3 @@
 export * from './savesController';
-export * from './auth/register';
-export * from './auth/login';
+export * from './auth/registerController';
+export * from './auth/loginController';

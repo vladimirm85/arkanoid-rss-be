@@ -1,10 +1,10 @@
 import { Response } from 'express';
-import { UserDocumentInterface } from '../models';
+import { UserDocumentInterface, SaveDocumentInterface } from '../models';
 
 export const successHandler = (
   res: Response,
   code: number,
-  document: UserDocumentInterface | string
+  document: UserDocumentInterface | SaveDocumentInterface | string
 ): Response =>
   res.status(code).json({
     success: true,

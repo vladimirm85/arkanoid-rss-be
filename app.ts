@@ -4,7 +4,7 @@ import * as passport from 'passport';
 import * as logger from 'morgan';
 import * as cors from 'cors';
 import { savesRouter, authRouter } from './routes';
-import { createPassportJwt } from './middlewares';
+import { jwtRouteProtector } from './middlewares';
 
 export const app = express();
 
@@ -19,7 +19,7 @@ mongoose.connect(url, {
 });
 
 app.use(passport.initialize());
-createPassportJwt(passport);
+jwtRouteProtector(passport);
 
 app.use(logger('dev'));
 app.use(cors());
