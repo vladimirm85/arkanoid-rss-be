@@ -44,7 +44,6 @@ export const register = async (req: Request, res: Response): Promise<void | Resp
   const verificationKeyData: VerKeyInterface = {
     userId: user._id,
     hash: hash,
-    verifiedAt: new Date(),
   };
 
   const verificationKey = await VerKeyModel.create(verificationKeyData);
@@ -62,7 +61,7 @@ export const register = async (req: Request, res: Response): Promise<void | Resp
 
   const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
 
-  const path = baseUrl + `/email-verification/${hash}`;
+  const path = baseUrl + `/verify/${hash}`;
 
   const isMailSend = await mailSend(
     path,

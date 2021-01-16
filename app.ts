@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose';
 import * as passport from 'passport';
 import * as logger from 'morgan';
 import * as cors from 'cors';
-import { savesRouter, authRouter } from './routes';
+import { savesRouter, authRouter, accountRouter } from './routes';
 import { jwtRouteProtector } from './middlewares';
 
 export const app = express();
@@ -28,6 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/saves', savesRouter);
 app.use('/auth', authRouter);
+app.use('/account', accountRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res) {

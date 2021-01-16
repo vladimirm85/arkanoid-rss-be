@@ -7,5 +7,5 @@ export const createToken = (userData) =>
       userId: userData._id,
     },
     process.env.JWT_KEY,
-    { expiresIn: 60 * 60 }
+    { expiresIn: '24h' }
   );

@@ -3,7 +3,6 @@ import { Schema, Document, model, Model } from 'mongoose';
 export interface VerKeyInterface {
   userId: string;
   hash: string;
-  verifiedAt: Date;
 }
 
 interface VerKeyDocumentInterface extends VerKeyInterface, Document {}
