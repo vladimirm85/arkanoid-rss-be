@@ -3,9 +3,9 @@ import { VerKeyModel } from '../../models';
 import { errorHandler, successHandler } from '../../utils';
 
 export const verify = async (req: Request, res: Response): Promise<Response> => {
-  const { verificationKey } = req.body;
+  const { key } = req.params;
 
-  const userVerificationKey = await VerKeyModel.findOne({ hash: verificationKey });
+  const userVerificationKey = await VerKeyModel.findOne({ hash: key });
 
   if (!userVerificationKey) {
     return errorHandler(res, 500, `verification: verificationKey was not found in database`);
