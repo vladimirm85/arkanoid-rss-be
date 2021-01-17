@@ -1,6 +1,11 @@
 import * as jwt from 'jsonwebtoken';
 
-export const createToken = (userData) =>
+export interface TokenUserData {
+  email: string;
+  _id: string;
+}
+
+export const createToken = (userData: TokenUserData) =>
   jwt.sign(
     {
       email: userData.email,

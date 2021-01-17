@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { SaveModel, SaveInterface } from '../models/SaveModel';
-import { errorHandler, successHandler } from '../utils';
+import { errorHandler, successHandler, TokenUserData } from '../utils';
 
 export const getAllSaves = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -28,11 +28,15 @@ export const getSaveById = async (req: Request, res: Response): Promise<Response
 };
 
 export const createSave = async (req: Request, res: Response): Promise<Response> => {
-  const { saveJSON, userId } = req.body;
+  const { saveJSON } = req.body;
+
+  const user = req.user as TokenUserData;
+
+  console.log(user._id);
 
   const saveData: SaveInterface = {
     saveJSON,
-    userId,
+    userId: user._id,
     createdAt: new Date(),
   };
 

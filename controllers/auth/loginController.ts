@@ -3,7 +3,7 @@ import { pick } from 'lodash';
 import * as bcryptjs from 'bcryptjs';
 import { UserModel, VerKeyModel } from '../../models';
 import { userLoginSchema, userValidation } from '../../validation';
-import { errorHandler, successHandler, createToken } from '../../utils';
+import { errorHandler, successHandler, createToken, TokenUserData } from '../../utils';
 
 export const login = async (req: Request, res: Response): Promise<void | Response> => {
   const { email, password } = req.body;
@@ -28,7 +28,7 @@ export const login = async (req: Request, res: Response): Promise<void | Respons
     return errorHandler(res, 422, 'Email or password is incorrect');
   }
 
-  const token = await createToken(pick(userCandidate, ['_id', 'email']));
+  const token = await createToken(pick(userCandidate, ['_id', 'email']) as TokenUserData);
   if (!token) {
     errorHandler(res, 500, 'login: token was not created');
   }
