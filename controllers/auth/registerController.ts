@@ -36,6 +36,7 @@ export const register = async (req: Request, res: Response): Promise<void | Resp
   const userData: UserInterface = {
     email,
     password,
+    totalScore: 0,
     createdAt: new Date(),
   };
 

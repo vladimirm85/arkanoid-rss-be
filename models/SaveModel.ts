@@ -1,7 +1,7 @@
 import { Schema, Document, model, Model } from 'mongoose';
 
 export interface SaveInterface {
-  saveJSON: string;
+  saveData: string;
   userId: string;
   createdAt: Date;
 }
@@ -9,8 +9,8 @@ export interface SaveInterface {
 export interface SaveDocumentInterface extends SaveInterface, Document {}
 
 const SaveSchema: Schema<SaveDocumentInterface> = new Schema({
-  saveJSON: {
-    type: String,
+  saveData: {
+    type: Object,
     required: true,
   },
   userId: {

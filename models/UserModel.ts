@@ -4,6 +4,7 @@ import { generateHash } from '../utils';
 export interface UserInterface {
   email: string;
   password: string;
+  totalScore: number;
   createdAt: Date;
 }
 
@@ -17,6 +18,10 @@ const UserSchema: Schema<UserDocumentInterface> = new Schema({
   },
   password: {
     type: String,
+    required: true,
+  },
+  totalScore: {
+    type: Number,
     required: true,
   },
   createdAt: {

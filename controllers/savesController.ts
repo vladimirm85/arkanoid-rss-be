@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { SaveModel, SaveInterface } from '../models/SaveModel';
+import { SaveModel, SaveInterface } from '../models/';
 import { errorHandler, successHandler, TokenUserData } from '../utils';
 
 export const getAllSaves = async (req: Request, res: Response): Promise<Response> => {
@@ -28,22 +28,22 @@ export const getSaveById = async (req: Request, res: Response): Promise<Response
 };
 
 export const createSave = async (req: Request, res: Response): Promise<Response> => {
-  const { saveJSON } = req.body;
+  const { saveData } = req.body;
 
   const user = req.user as TokenUserData;
 
-  const saveData: SaveInterface = {
-    saveJSON,
+  const save: SaveInterface = {
+    saveData,
     userId: user._id,
     createdAt: new Date(),
   };
 
-  const save = await SaveModel.create(saveData);
+  const saveDoc = await SaveModel.create(save);
 
   try {
-    await save.save();
+    await saveDoc.save();
 
-    successHandler(res, 201, save);
+    successHandler(res, 201, saveDoc);
   } catch (e: unknown) {
     if (!(e instanceof Error)) throw e;
 
@@ -53,12 +53,12 @@ export const createSave = async (req: Request, res: Response): Promise<Response>
 
 export const updateSave = async (req: Request, res: Response): Promise<Response> => {
   const { id } = req.params;
-  const { saveJSON } = req.body;
+  const { saveData } = req.body;
 
   try {
     const save = await SaveModel.findByIdAndUpdate(
       id,
-      { saveJSON },
+      { saveData },
       { new: true, useFindAndModify: false }
     );
 
