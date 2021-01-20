@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import { VerKeyModel } from '../../models';
-import { errorHandler, successHandler } from '../../utils';
+import { pick } from 'lodash';
+import { UserModel, VerKeyModel } from '../../models';
+import { createToken, errorHandler, successHandler, TokenUserData } from '../../utils';
 
 export const verify = async (req: Request, res: Response): Promise<Response> => {
   const { key } = req.params;
@@ -11,13 +12,21 @@ export const verify = async (req: Request, res: Response): Promise<Response> => 
     return errorHandler(res, 500, `verification: verificationKey was not found in database`);
   }
 
-  try {
-    await userVerificationKey.updateOne({ verifiedAt: new Date() });
+  if (!userVerificationKey.verifiedAt) {
+    try {
+      await userVerificationKey.updateOne({ verifiedAt: new Date() });
 
-    return successHandler(res, 200, 'verification successful');
-  } catch (e: unknown) {
-    if (!(e instanceof Error)) throw e;
+      const userCandidate = await UserModel.findById(userVerificationKey.userId);
 
-    return errorHandler(res, 500, e.message);
+      const token = await createToken(pick(userCandidate, ['_id', 'email']) as TokenUserData);
+
+      return successHandler(res, 201, `Bearer ${token}`);
+    } catch (e: unknown) {
+      if (!(e instanceof Error)) throw e;
+
+      return errorHandler(res, 500, e.message);
+    }
   }
+
+  return errorHandler(res, 409, 'already verified');
 };
