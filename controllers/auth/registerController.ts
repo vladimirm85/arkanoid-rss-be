@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { v4 as uuid } from 'uuid';
 import { UserModel, UserInterface, VerKeyModel, VerKeyInterface } from '../../models';
 import { userRegisterSchema, userValidation } from '../../validation';
-import { errorHandler, successHandler, generateHash, mailSend } from '../../utils';
+import { errorHandler, successHandler, mailSend } from '../../utils';
 
 export const register = async (req: Request, res: Response): Promise<void | Response> => {
   const { email, password } = req.body;
@@ -24,11 +24,6 @@ export const register = async (req: Request, res: Response): Promise<void | Resp
       409,
       `${userValidateCandidate.error.details[0].path[0]} validation error`
     );
-  }
-
-  const hashPassword = await generateHash(password);
-  if (!hashPassword) {
-    return errorHandler(res, 500, 'hashPassword was not generated');
   }
 
   const hash = uuid();
