@@ -19,7 +19,7 @@ const RecoveryPasswordKeySchema: Schema<RecoveryPasswordKeyDocumentInterface> = 
   },
   usedAt: {
     type: Date,
-    usedAt: null,
+    default: null,
   },
 });
 
