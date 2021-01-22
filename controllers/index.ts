@@ -6,3 +6,4 @@ export * from './auth/loginController';
 export * from './account/verifyController';
 export * from './account/getAccountController';
 export * from './account/forgotPasswordController';
+export * from './account/restorePasswordController';

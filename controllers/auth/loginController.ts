@@ -2,13 +2,13 @@ import { Request, Response } from 'express';
 import { pick } from 'lodash';
 import * as bcryptjs from 'bcryptjs';
 import { UserModel, VerKeyModel } from '../../models';
-import { userLoginSchema, userValidation } from '../../validation';
+import { userLoginSchema, dataValidation } from '../../validation';
 import { errorHandler, successHandler, createToken, TokenUserData } from '../../utils';
 
 export const login = async (req: Request, res: Response): Promise<void | Response> => {
   const { email, password } = req.body;
 
-  const isUserValid = userValidation(res, userLoginSchema, req.body);
+  const isUserValid = dataValidation(res, userLoginSchema, req.body);
   if (!isUserValid) {
     return;
   }

@@ -4,7 +4,7 @@ import { errorHandler, successHandler, TokenUserData } from '../utils';
 
 export const getAllSaves = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const saves = await SaveModel.find({});
+    const saves = await SaveModel.find({}); // TODO filter by user id
 
     return successHandler(res, 200, saves);
   } catch (e: unknown) {
@@ -16,7 +16,7 @@ export const getAllSaves = async (req: Request, res: Response): Promise<Response
 
 export const getSaveById = async (req: Request, res: Response): Promise<Response> => {
   const { id } = req.params;
-
+  // TODO filter by user id
   try {
     const save = await SaveModel.findById(id);
     successHandler(res, 200, save);

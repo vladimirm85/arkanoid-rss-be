@@ -3,7 +3,7 @@ import { Schema, Document, model, Model } from 'mongoose';
 export interface RecoveryPasswordKeyInterface {
   userId: string;
   hash: string;
-  usedAt?: Date;
+  createdAt?: Date;
 }
 
 interface RecoveryPasswordKeyDocumentInterface extends RecoveryPasswordKeyInterface, Document {}
@@ -17,7 +17,7 @@ const RecoveryPasswordKeySchema: Schema<RecoveryPasswordKeyDocumentInterface> = 
     type: String,
     required: true,
   },
-  usedAt: {
+  createdAt: {
     type: Date,
     default: null,
   },

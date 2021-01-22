@@ -16,6 +16,7 @@ export const forgotPassword = async (req: Request, res: Response): Promise<Respo
   const recoveryPasswordKeyData: RecoveryPasswordKeyInterface = {
     userId: userCandidate._id,
     hash,
+    createdAt: new Date(),
   };
 
   const recoveryPasswordKey = await RecoveryPasswordKeyModel.create(recoveryPasswordKeyData);
