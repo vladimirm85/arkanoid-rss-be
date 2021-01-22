@@ -8,18 +8,18 @@ import {
   createToken,
 } from '../../utils';
 import { dataValidation, restorePasswordSchema } from '../../validation';
+import { pick } from 'lodash';
 
 export const restorePassword = async (req: Request, res: Response): Promise<Response> => {
   const { password } = req.body;
   const { key } = req.params;
-  const user = req.user as TokenUserData;
 
   const recPassKeyCandidate = await RecoveryPasswordKeyModel.findOne({ hash: key });
   if (!recPassKeyCandidate) {
     return errorHandler(res, 401, `No such recovery password key`);
   }
 
-  const userCandidate = await UserModel.findById(user._id);
+  const userCandidate = await UserModel.findById(recPassKeyCandidate.userId);
   if (!userCandidate) {
     return errorHandler(res, 401, `No such user`);
   }
@@ -32,11 +32,11 @@ export const restorePassword = async (req: Request, res: Response): Promise<Resp
   const hashedPassword = await generateHash(password);
 
   try {
+    const token = await createToken(pick(userCandidate, ['_id', 'email']) as TokenUserData);
+
     await userCandidate.updateOne({ password: hashedPassword });
 
     await recPassKeyCandidate.remove();
-
-    const token = await createToken(req.user as TokenUserData);
 
     return successHandler(res, 201, `Bearer ${token}`);
   } catch (e: unknown) {

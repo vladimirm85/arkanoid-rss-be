@@ -8,14 +8,6 @@ accountRouter.get('/', passport.authenticate('jwt', { session: false }), getAcco
 
 accountRouter.get('/verify/:key', verify);
 
-accountRouter.get(
-  '/forgot-password/',
-  passport.authenticate('jwt', { session: false }),
-  forgotPassword
-);
+accountRouter.get('/forgot-password/', forgotPassword);
 
-accountRouter.get(
-  '/restore-password/:key',
-  passport.authenticate('jwt', { session: false }),
-  restorePassword
-);
+accountRouter.get('/restore-password/:key', restorePassword);
