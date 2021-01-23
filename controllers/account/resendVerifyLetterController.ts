@@ -3,8 +3,6 @@ import { v4 as uuid } from 'uuid';
 import { UserModel, VerKeyModel, VerKeyInterface } from '../../models';
 import { errorHandler, successHandler, mailSend } from '../../utils';
 
-// TODO refactor, if verified do nothing
-
 export const resendVerifyLetter = async (req: Request, res: Response): Promise<Response> => {
   const { email } = req.body;
 
@@ -23,6 +21,9 @@ export const resendVerifyLetter = async (req: Request, res: Response): Promise<R
     });
     if (!verificationKeyCandidate) {
       return errorHandler(res, 404, `No such verification key`);
+    }
+    if (await verificationKeyCandidate.verifiedAt) {
+      return errorHandler(res, 401, `email ${email} is already verified`);
     }
 
     const verificationKeyData: VerKeyInterface = {
