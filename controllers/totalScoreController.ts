@@ -7,7 +7,7 @@ export const getAllTotalScores = async (req: Request, res: Response): Promise<Re
 
   try {
     const totalScores = await TotalScoreModel.find()
-      .sort({ score: -1 })
+      .sort({ totalScore: -1 })
       .limit(+limit);
 
     return successHandler(res, 200, totalScores);

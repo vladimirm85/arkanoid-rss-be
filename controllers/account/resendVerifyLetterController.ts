@@ -3,6 +3,8 @@ import { v4 as uuid } from 'uuid';
 import { UserModel, VerKeyModel, VerKeyInterface } from '../../models';
 import { errorHandler, successHandler, mailSend } from '../../utils';
 
+// TODO refactor, if verified do nothing
+
 export const resendVerifyLetter = async (req: Request, res: Response): Promise<Response> => {
   const { email } = req.body;
 
