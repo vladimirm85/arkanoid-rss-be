@@ -1,19 +1,29 @@
 import { Request, Response } from 'express';
 import { v4 as uuid } from 'uuid';
-import { UserModel, RecoveryPasswordKeyModel, RecoveryPasswordKeyInterface } from '../../models';
+import {
+  UserModel,
+  RecoveryPasswordKeyModel,
+  RecoveryPasswordKeyInterface,
+  VerKeyModel,
+} from '../../models';
 import { errorHandler, successHandler, mailSend } from '../../utils';
 
-export const forgotPassword = async (req: Request, res: Response): Promise<Response> => {
-  const email = req.query.email as string;
+export const resendVerifyLetter = async (req: Request, res: Response): Promise<Response> => {
+  const { email } = req.body;
 
   const hash = uuid();
   const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-  const path = baseUrl + `/forgot-password/${hash}`;
+  const path = baseUrl + `/verify/${hash}`;
 
   try {
     const userCandidate = await UserModel.findOne({ email });
     if (!userCandidate) {
       return errorHandler(res, 404, `No such user with email: ${email}`);
+    }
+
+    const verificationKeyCandidate = await VerKeyModel.findOne({ userId: userCandidate._id });
+    if (!verificationKeyCandidate) {
+      return errorHandler(res, 404, `No such verification key`);
     }
 
     const recoveryPasswordKeyData: RecoveryPasswordKeyInterface = {

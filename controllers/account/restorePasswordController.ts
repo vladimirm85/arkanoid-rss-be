@@ -17,12 +17,12 @@ export const restorePassword = async (req: Request, res: Response): Promise<Resp
   try {
     const recPassKeyCandidate = await RecoveryPasswordKeyModel.findOne({ hash: key });
     if (!recPassKeyCandidate) {
-      return errorHandler(res, 401, `No such recovery password key`);
+      return errorHandler(res, 404, `No such recovery password key`);
     }
 
     const userCandidate = await UserModel.findById(recPassKeyCandidate.userId);
     if (!userCandidate) {
-      return errorHandler(res, 401, `No such user`);
+      return errorHandler(res, 404, `No such user`);
     }
 
     const isPasswordValid = dataValidation(res, restorePasswordSchema, req.body);

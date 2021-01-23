@@ -25,7 +25,7 @@ export const createTotalScore = async (req: Request, res: Response): Promise<Res
 
   const userCandidate = await UserModel.findById(user._id);
   if (!userCandidate) {
-    return errorHandler(res, 500, `user not found`);
+    return errorHandler(res, 404, `user not found`);
   }
 
   if (userCandidate.totalScore < totalScore) {

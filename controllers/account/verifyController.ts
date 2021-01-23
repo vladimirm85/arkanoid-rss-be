@@ -9,7 +9,7 @@ export const verify = async (req: Request, res: Response): Promise<Response> => 
   const userVerificationKey = await VerKeyModel.findOne({ hash: key });
 
   if (!userVerificationKey) {
-    return errorHandler(res, 500, `verification: verificationKey was not found in database`);
+    return errorHandler(res, 404, `verification: verificationKey was not found in database`);
   }
 
   if (!userVerificationKey.verifiedAt) {

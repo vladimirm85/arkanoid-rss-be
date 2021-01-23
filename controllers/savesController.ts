@@ -12,7 +12,7 @@ export const getAllSaves = async (req: Request, res: Response): Promise<Response
   } catch (e: unknown) {
     if (!(e instanceof Error)) throw e;
 
-    return errorHandler(res, 404, e.message);
+    return errorHandler(res, 500, e.message);
   }
 };
 
@@ -26,7 +26,7 @@ export const getSaveById = async (req: Request, res: Response): Promise<Response
   } catch (e: unknown) {
     if (!(e instanceof Error)) throw e;
 
-    return errorHandler(res, 404, e.message);
+    return errorHandler(res, 500, e.message);
   }
 };
 
@@ -66,7 +66,7 @@ export const updateSave = async (req: Request, res: Response): Promise<Response>
       { new: true, useFindAndModify: false }
     );
     if (!save) {
-      throw new Error('No such save');
+      return errorHandler(res, 404, 'No such save');
     }
 
     successHandler(res, 201, save);
@@ -87,13 +87,13 @@ export const deleteSave = async (req: Request, res: Response): Promise<Response>
       { useFindAndModify: false }
     );
     if (!save) {
-      throw new Error('No such save');
+      return errorHandler(res, 404, 'No such save');
     }
 
     successHandler(res, 200, 'Deleted');
   } catch (e: unknown) {
     if (!(e instanceof Error)) throw e;
 
-    return errorHandler(res, 404, e.message);
+    return errorHandler(res, 500, e.message);
   }
 };
