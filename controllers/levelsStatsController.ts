@@ -30,9 +30,9 @@ export const createLevelStat = async (req: Request, res: Response): Promise<Resp
     createdAt: new Date(),
   };
 
-  const levelStatDoc = await LevelStatModel.create(levelStat);
-
   try {
+    const levelStatDoc = await LevelStatModel.create(levelStat);
+
     await levelStatDoc.save();
 
     successHandler(res, 201, levelStatDoc);

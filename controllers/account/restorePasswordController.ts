@@ -14,24 +14,24 @@ export const restorePassword = async (req: Request, res: Response): Promise<Resp
   const { password } = req.body;
   const { key } = req.params;
 
-  const recPassKeyCandidate = await RecoveryPasswordKeyModel.findOne({ hash: key });
-  if (!recPassKeyCandidate) {
-    return errorHandler(res, 401, `No such recovery password key`);
-  }
-
-  const userCandidate = await UserModel.findById(recPassKeyCandidate.userId);
-  if (!userCandidate) {
-    return errorHandler(res, 401, `No such user`);
-  }
-
-  const isPasswordValid = dataValidation(res, restorePasswordSchema, req.body);
-  if (!isPasswordValid) {
-    return;
-  }
-
-  const hashedPassword = await generateHash(password);
-
   try {
+    const recPassKeyCandidate = await RecoveryPasswordKeyModel.findOne({ hash: key });
+    if (!recPassKeyCandidate) {
+      return errorHandler(res, 401, `No such recovery password key`);
+    }
+
+    const userCandidate = await UserModel.findById(recPassKeyCandidate.userId);
+    if (!userCandidate) {
+      return errorHandler(res, 401, `No such user`);
+    }
+
+    const isPasswordValid = dataValidation(res, restorePasswordSchema, req.body);
+    if (!isPasswordValid) {
+      return;
+    }
+
+    const hashedPassword = await generateHash(password);
+
     const token = await createToken(pick(userCandidate, ['_id', 'email']) as TokenUserData);
 
     await userCandidate.updateOne({ password: hashedPassword });

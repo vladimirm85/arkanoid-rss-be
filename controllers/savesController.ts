@@ -41,9 +41,9 @@ export const createSave = async (req: Request, res: Response): Promise<Response>
     createdAt: new Date(),
   };
 
-  const saveDoc = await SaveModel.create(save);
-
   try {
+    const saveDoc = await SaveModel.create(save);
+
     await saveDoc.save();
 
     successHandler(res, 201, saveDoc);
