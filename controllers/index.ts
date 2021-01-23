@@ -4,6 +4,7 @@ export * from './totalScoreController';
 export * from './auth/registerController';
 export * from './auth/loginController';
 export * from './account/verifyController';
+export * from './account/setAvatarController';
 export * from './account/getAccountController';
 export * from './account/forgotPasswordController';
 export * from './account/restorePasswordController';

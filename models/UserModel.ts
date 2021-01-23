@@ -5,6 +5,7 @@ export interface UserInterface {
   email: string;
   password: string;
   totalScore: number;
+  avatar?: object;
   createdAt: Date;
 }
 
@@ -23,6 +24,10 @@ const UserSchema: Schema<UserDocumentInterface> = new Schema({
   totalScore: {
     type: Number,
     required: true,
+  },
+  avatar: {
+    type: Object,
+    default: null,
   },
   createdAt: {
     type: Date,

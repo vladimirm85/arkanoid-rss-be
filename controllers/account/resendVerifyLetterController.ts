@@ -16,7 +16,7 @@ export const resendVerifyLetter = async (req: Request, res: Response): Promise<R
       return errorHandler(res, 404, `No such user with email: ${email}`);
     }
 
-    const verificationKeyCandidate = await VerKeyModel.findOneAndDelete({
+    const verificationKeyCandidate = await VerKeyModel.findOne({
       userId: userCandidate._id,
     });
     if (!verificationKeyCandidate) {
@@ -25,6 +25,8 @@ export const resendVerifyLetter = async (req: Request, res: Response): Promise<R
     if (await verificationKeyCandidate.verifiedAt) {
       return errorHandler(res, 401, `email ${email} is already verified`);
     }
+
+    verificationKeyCandidate.remove();
 
     const verificationKeyData: VerKeyInterface = {
       userId: userCandidate._id,
