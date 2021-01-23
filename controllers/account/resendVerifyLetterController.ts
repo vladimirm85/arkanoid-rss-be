@@ -1,11 +1,6 @@
 import { Request, Response } from 'express';
 import { v4 as uuid } from 'uuid';
-import {
-  UserModel,
-  RecoveryPasswordKeyModel,
-  RecoveryPasswordKeyInterface,
-  VerKeyModel,
-} from '../../models';
+import { UserModel, VerKeyModel, VerKeyInterface } from '../../models';
 import { errorHandler, successHandler, mailSend } from '../../utils';
 
 export const resendVerifyLetter = async (req: Request, res: Response): Promise<Response> => {
@@ -21,32 +16,32 @@ export const resendVerifyLetter = async (req: Request, res: Response): Promise<R
       return errorHandler(res, 404, `No such user with email: ${email}`);
     }
 
-    const verificationKeyCandidate = await VerKeyModel.findOne({ userId: userCandidate._id });
+    const verificationKeyCandidate = await VerKeyModel.findOneAndDelete({
+      userId: userCandidate._id,
+    });
     if (!verificationKeyCandidate) {
       return errorHandler(res, 404, `No such verification key`);
     }
 
-    const recoveryPasswordKeyData: RecoveryPasswordKeyInterface = {
+    const verificationKeyData: VerKeyInterface = {
       userId: userCandidate._id,
       hash,
-      createdAt: new Date(),
     };
 
-    const recoveryPasswordKey = await RecoveryPasswordKeyModel.create(recoveryPasswordKeyData);
-
-    await recoveryPasswordKey.save();
-
-    successHandler(res, 201, 'recovery password key created');
+    const verificationKey = await VerKeyModel.create(verificationKeyData);
+    await verificationKey.save();
 
     const isMailSend = await mailSend(
       path,
       email,
-      'Password recovery',
-      'Follow the link to recover your password: '
+      'Email confirmation',
+      'Follow the link to verify your email: '
     );
     if (!isMailSend) {
-      return errorHandler(res, 500, 'password recovery: password recovery letter was not sent');
+      return errorHandler(res, 500, 'verification letter was not sent');
     }
+
+    successHandler(res, 200, 'verification letter sent');
   } catch (e: unknown) {
     if (!(e instanceof Error)) throw e;
 

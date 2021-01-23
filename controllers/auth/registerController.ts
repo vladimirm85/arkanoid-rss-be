@@ -42,7 +42,7 @@ export const register = async (req: Request, res: Response): Promise<void | Resp
 
     const verificationKeyData: VerKeyInterface = {
       userId: user._id,
-      hash: hash,
+      hash,
     };
 
     const verificationKey = await VerKeyModel.create(verificationKeyData);

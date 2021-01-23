@@ -4,7 +4,7 @@ import { UserModel, RecoveryPasswordKeyModel, RecoveryPasswordKeyInterface } fro
 import { errorHandler, successHandler, mailSend } from '../../utils';
 
 export const forgotPassword = async (req: Request, res: Response): Promise<Response> => {
-  const email = req.query.email as string;
+  const { email } = req.body;
 
   const hash = uuid();
   const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
