@@ -8,7 +8,6 @@ import {
   resendVerifyLetter,
   setAvatar,
 } from '../controllers';
-import { upload } from '../middlewares';
 
 export const accountRouter = Router();
 
@@ -22,9 +21,4 @@ accountRouter.post('/restore-password/:key', restorePassword);
 
 accountRouter.post('/resend-verify/', resendVerifyLetter);
 
-accountRouter.post(
-  '/set-avatar/',
-  passport.authenticate('jwt', { session: false }),
-  upload.single('image'),
-  setAvatar
-);
+accountRouter.post('/set-avatar/', passport.authenticate('jwt', { session: false }), setAvatar);
