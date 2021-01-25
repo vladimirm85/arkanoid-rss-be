@@ -3,6 +3,7 @@ import { Schema, Document, model, Model } from 'mongoose';
 export interface LevelStatInterface {
   level: number;
   score: number;
+  userId: string;
   nickname: string;
   createdAt: Date;
 }
@@ -16,6 +17,10 @@ const LevelStatSchema: Schema<LevelStatDocumentInterface> = new Schema({
   },
   score: {
     type: Number,
+    required: true,
+  },
+  userId: {
+    type: String,
     required: true,
   },
   nickname: {
