@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { LevelStatModel, LevelStatInterface } from '../models/';
+import { LevelStatModel, LevelStatInterface, UserModel } from '../models/';
 import { errorHandler, successHandler, TokenUserData } from '../utils';
 
 export const getAllLevelsStats = async (req: Request, res: Response): Promise<Response> => {
@@ -23,14 +23,19 @@ export const createLevelStat = async (req: Request, res: Response): Promise<Resp
 
   const user = req.user as TokenUserData;
 
-  const levelStat: LevelStatInterface = {
-    level,
-    score,
-    nickname: user.email.split('@')[0],
-    createdAt: new Date(),
-  };
-
   try {
+    const userCandidate = await UserModel.findById(user._id);
+    if (userCandidate) {
+      return errorHandler(res, 404, `No such user`);
+    }
+
+    const levelStat: LevelStatInterface = {
+      level,
+      score,
+      nickname: userCandidate.nickname,
+      createdAt: new Date(),
+    };
+
     const levelStatDoc = await LevelStatModel.create(levelStat);
 
     await levelStatDoc.save();

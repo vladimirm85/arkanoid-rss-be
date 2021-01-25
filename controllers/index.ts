@@ -3,6 +3,7 @@ export * from './levelsStatsController';
 export * from './totalScoreController';
 export * from './auth/registerController';
 export * from './auth/loginController';
+export * from './auth/loginGoogleController';
 export * from './account/verifyController';
 export * from './account/setAvatarController';
 export * from './account/getAccountController';

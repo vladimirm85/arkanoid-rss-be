@@ -3,9 +3,10 @@ import { generateHash } from '../utils';
 
 export interface UserInterface {
   email: string;
-  password: string;
+  nickname: string;
+  password?: string;
   totalScore: number;
-  avatar?: object;
+  avatar?: string;
   createdAt: Date;
 }
 
@@ -17,16 +18,20 @@ const UserSchema: Schema<UserDocumentInterface> = new Schema({
     unique: true,
     required: true,
   },
-  password: {
+  nickname: {
     type: String,
     required: true,
+  },
+  password: {
+    type: String,
+    default: '',
   },
   totalScore: {
     type: Number,
     required: true,
   },
   avatar: {
-    type: Object,
+    type: String,
     default: null,
   },
   createdAt: {

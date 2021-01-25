@@ -38,7 +38,7 @@ export const createTotalScore = async (req: Request, res: Response): Promise<Res
         const totalScoreItem: TotalScoreInterface = {
           totalScore,
           userId: user._id,
-          nickname: user.email.split('@')[0],
+          nickname: userCandidate.nickname,
           createdAt: new Date(),
         };
 

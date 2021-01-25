@@ -33,6 +33,7 @@ export const register = async (req: Request, res: Response): Promise<void | Resp
 
     const userData: UserInterface = {
       email,
+      nickname: email.split('@')[0],
       password,
       totalScore: 0,
       createdAt: new Date(),
