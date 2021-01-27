@@ -5,10 +5,12 @@ import { v4 as uuid } from 'uuid';
 
 const { Strategy } = passportGoogle;
 
+const baseUrl = process.env.BACK_BASE_URL || 'http://localhost:3000';
+
 const options = {
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: 'https://arkanoid-rss-be.herokuapp.com/auth/google/callback',
+  callbackURL: `${baseUrl}/auth/google/callback`,
 };
 
 export const googleRouteProtector = (passport: PassportStatic) => {

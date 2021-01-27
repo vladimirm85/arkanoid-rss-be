@@ -7,6 +7,6 @@ export const loginFacebook = async (req: Request, res: Response): Promise<void |
 
   const token = await createToken(pick(user, ['_id', 'email']) as TokenUserData);
 
-  const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+  const baseUrl = process.env.FRONT_BASE_URL || 'http://localhost:3000';
   res.redirect(`${baseUrl}/social-login-success/?token=${token}`);
 };

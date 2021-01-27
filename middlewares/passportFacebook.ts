@@ -5,10 +5,12 @@ import { v4 as uuid } from 'uuid';
 
 const { Strategy } = passportFacebook;
 
+const baseUrl = process.env.BACK_BASE_URL || 'http://localhost:3000';
+
 const options = {
   clientID: process.env.FACEBOOK_CLIENT_ID,
   clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-  callbackURL: 'https://arkanoid-rss-be.herokuapp.com/auth/facebook/callback',
+  callbackURL: `${baseUrl}/auth/facebook/callback`,
   profileFields: ['id', 'displayName', 'photos', 'email'],
 };
 

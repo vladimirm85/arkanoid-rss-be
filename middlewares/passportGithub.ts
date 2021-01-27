@@ -5,10 +5,12 @@ import { v4 as uuid } from 'uuid';
 
 const { Strategy } = passportGithub;
 
+const baseUrl = process.env.BACK_BASE_URL || 'http://localhost:3000';
+
 const options = {
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  callbackURL: 'https://arkanoid-rss-be.herokuapp.com/auth/github/callback',
+  callbackURL: `${baseUrl}/auth/github/callback`,
 };
 
 export const githubRouteProtector = (passport: PassportStatic) => {
