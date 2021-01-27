@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { login, register, loginGoogle } from '../controllers';
+import { login, register, loginGoogle, loginGithub, loginFacebook } from '../controllers';
 import * as passport from 'passport';
 
 export const authRouter = Router();
@@ -14,6 +14,22 @@ authRouter.get(
   '/google/callback',
   passport.authenticate('google', { failureRedirect: `${baseUrl}/login`, session: false }),
   loginGoogle
+);
+
+authRouter.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+
+authRouter.get(
+  '/github/callback',
+  passport.authenticate('github', { failureRedirect: `${baseUrl}/login`, session: false }),
+  loginGithub
+);
+
+authRouter.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+
+authRouter.get(
+  '/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: `${baseUrl}/login`, session: false }),
+  loginFacebook
 );
 
 authRouter.post('/register', register);

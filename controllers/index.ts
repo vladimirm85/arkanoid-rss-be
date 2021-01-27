@@ -4,6 +4,8 @@ export * from './totalScoreController';
 export * from './auth/registerController';
 export * from './auth/loginController';
 export * from './auth/loginGoogleController';
+export * from './auth/loginFacebookController';
+export * from './auth/loginGithubController';
 export * from './account/verifyController';
 export * from './account/setAvatarController';
 export * from './account/getAccountController';

@@ -10,7 +10,12 @@ import {
   levelsStatsRouter,
   totalScoreRouter,
 } from './routes';
-import { jwtRouteProtector, googleRouteProtector } from './middlewares';
+import {
+  jwtRouteProtector,
+  googleRouteProtector,
+  githubRouteProtector,
+  facebookRouteProtector,
+} from './middlewares';
 
 export const app = express();
 
@@ -27,6 +32,8 @@ mongoose.connect(url, {
 app.use(passport.initialize());
 jwtRouteProtector(passport);
 googleRouteProtector(passport);
+githubRouteProtector(passport);
+facebookRouteProtector(passport);
 
 app.use(logger('dev'));
 app.use(cors());
