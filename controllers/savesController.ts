@@ -3,7 +3,7 @@ import { SaveModel, SaveInterface } from '../models/';
 import { errorHandler, successHandler, TokenUserData } from '../utils';
 
 export const getAllSaves = async (req: Request, res: Response): Promise<Response> => {
-  const user = req.user as TokenUserData;
+  const user = <TokenUserData>req.user;
 
   try {
     const saves = await SaveModel.find({ userId: user._id });
@@ -18,7 +18,7 @@ export const getAllSaves = async (req: Request, res: Response): Promise<Response
 
 export const getSaveById = async (req: Request, res: Response): Promise<Response> => {
   const { id } = req.params;
-  const user = req.user as TokenUserData;
+  const user = <TokenUserData>req.user;
 
   try {
     const save = await SaveModel.find({ _id: id, userId: user._id });
@@ -33,7 +33,7 @@ export const getSaveById = async (req: Request, res: Response): Promise<Response
 export const createSave = async (req: Request, res: Response): Promise<Response> => {
   const { saveData } = req.body;
 
-  const user = req.user as TokenUserData;
+  const user = <TokenUserData>req.user;
 
   const save: SaveInterface = {
     saveData,
@@ -57,7 +57,7 @@ export const createSave = async (req: Request, res: Response): Promise<Response>
 export const updateSave = async (req: Request, res: Response): Promise<Response> => {
   const { id } = req.params;
   const { saveData } = req.body;
-  const user = req.user as TokenUserData;
+  const user = <TokenUserData>req.user;
 
   try {
     const save = await SaveModel.findOneAndUpdate(
@@ -79,7 +79,7 @@ export const updateSave = async (req: Request, res: Response): Promise<Response>
 
 export const deleteSave = async (req: Request, res: Response): Promise<Response> => {
   const { id } = req.params;
-  const user = req.user as TokenUserData;
+  const user = <TokenUserData>req.user;
 
   try {
     const save = await SaveModel.findOneAndDelete(
