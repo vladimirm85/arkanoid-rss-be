@@ -8,7 +8,7 @@ export const register = async (req: Request, res: Response): Promise<void | Resp
   const { email, password } = req.body;
 
   const hash = uuid();
-  const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+  const baseUrl = process.env.FRONT_BASE_URL || 'http://localhost:3000';
   const path = baseUrl + `/verify/${hash}`;
 
   try {

@@ -7,7 +7,7 @@ export const forgotPassword = async (req: Request, res: Response): Promise<Respo
   const { email } = req.body;
 
   const hash = uuid();
-  const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+  const baseUrl = process.env.FRONT_BASE_URL || 'http://localhost:3000';
   const path = baseUrl + `/forgot-password/${hash}`;
 
   try {

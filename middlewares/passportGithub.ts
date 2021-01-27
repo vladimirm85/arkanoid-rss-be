@@ -16,7 +16,7 @@ const options = {
 export const githubRouteProtector = (passport: PassportStatic) => {
   passport.use(
     new Strategy(options, async (accessToken, refreshToken, profile, done) => {
-      const { email, picture } = profile._json;
+      const { email, avatar_url } = profile._json;
       const hash = uuid();
 
       try {
@@ -30,7 +30,7 @@ export const githubRouteProtector = (passport: PassportStatic) => {
           totalScore: 0,
           email,
           nickname: email.split('@')[0],
-          avatar: picture,
+          avatar: avatar_url,
         };
 
         const user = await UserModel.create(userData);
