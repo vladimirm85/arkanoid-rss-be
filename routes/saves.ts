@@ -8,7 +8,7 @@ export const savesRouter = Router();
  * @swagger
  * components:
  *   schemas:
- *     Save:
+ *     Savess:
  *       type: object
  *       properties:
  *         _id:
@@ -18,7 +18,7 @@ export const savesRouter = Router();
  *         saveData:
  *           type: object
  *           description: Data of the saved game
- *           example: '{saveData: 'saveData'}'
+ *           example: 'dgrg'
  *         userId:
  *           type: string
  *           description: User ID
@@ -44,8 +44,6 @@ export const savesRouter = Router();
  *           application/json:
  *             schema:
  *             type: array
- *             items:
- *               $ref: '#/components/schemas/Save'
  *       500:
  *         description: error
  */

@@ -18,6 +18,7 @@ import {
   githubRouteProtector,
   facebookRouteProtector,
 } from './middlewares';
+import { swaggerOptions } from './swagger';
 
 export const app = express();
 
@@ -30,24 +31,6 @@ mongoose.connect(url, {
   useCreateIndex: true,
   useUnifiedTopology: true,
 });
-
-const swaggerOptions = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'Arkanoid API',
-      version: '1.0.0',
-      description: 'API for Arkanoid game',
-      contact: {
-        name: 'Vladimir Mazhirin',
-        url: 'https://github.com/vladimirm85',
-        email: 'vladimirm85@gmail.com',
-      },
-      servers: ['https://arkanoid-rss-be.herokuapp.com'],
-    },
-  },
-  apis: ['./routes/saves.ts'],
-};
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
