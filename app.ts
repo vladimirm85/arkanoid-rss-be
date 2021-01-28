@@ -43,7 +43,7 @@ const swaggerOptions = {
         url: 'https://github.com/vladimirm85',
         email: 'vladimirm85@gmail.com',
       },
-      servers: ['https://git.heroku.com/arkanoid-rss-be.git'],
+      servers: ['https://arkanoid-rss-be.herokuapp.com'],
     },
   },
   apis: ['./routes/saves.ts'],

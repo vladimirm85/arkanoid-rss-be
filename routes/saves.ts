@@ -8,6 +8,7 @@ export const savesRouter = Router();
  * @swagger
  * definitions:
  *   Save:
+ *     type: object
  *     properties:
  *       _id:
  *         type: string
