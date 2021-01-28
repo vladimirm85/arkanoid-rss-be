@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as swaggerUi from 'swagger-ui-express';
-import * as swaggerJsdoc from 'swagger-jsdoc';
+import * as YAML from 'yamljs';
 import * as passport from 'passport';
 import * as logger from 'morgan';
 import * as cors from 'cors';
@@ -18,7 +18,7 @@ import {
   githubRouteProtector,
   facebookRouteProtector,
 } from './middlewares';
-import { swaggerOptions } from './swagger';
+const swaggerDocs = YAML.load('./swagger.yaml');
 
 export const app = express();
 
@@ -32,7 +32,6 @@ mongoose.connect(url, {
   useUnifiedTopology: true,
 });
 
-const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(passport.initialize());
