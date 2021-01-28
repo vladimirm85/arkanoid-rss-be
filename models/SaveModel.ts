@@ -1,7 +1,7 @@
 import { Schema, Document, model, Model } from 'mongoose';
 
 export interface SaveInterface {
-  saveData: string;
+  saveData: object;
   userId: string;
   createdAt: Date;
 }
