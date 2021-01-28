@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
+import * as bodyparser from 'body-parser';
 import * as passport from 'passport';
 import * as logger from 'morgan';
 import * as cors from 'cors';
@@ -39,6 +40,10 @@ app.use(logger('dev'));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use(bodyparser.json({ limit: '20mb' }));
+app.use(bodyparser.urlencoded({ limit: '20mb', extended: true }));
+app.use(bodyparser.text({ limit: '20mb' }));
 
 app.use('/saves', savesRouter);
 app.use('/auth', authRouter);
