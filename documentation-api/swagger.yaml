@@ -116,6 +116,8 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/RegistrationData'
       responses:
+        '200':
+          $ref: '#/components/responses/EmailSend'
         '409':
           description: Conflict
           content:
@@ -139,6 +141,8 @@ paths:
       responses:
         '201':
           $ref: '#/components/responses/BearerToken'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/UserNotFound'
         '409':
@@ -264,8 +268,28 @@ components:
       content:
         application/json:
           schema:
-            type: string
-            example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRzeWJ1bGtvLmFydGVtQGdtYWlsLmNvbSIsInVzZXJJZCI6IjYwMGYyYTZiZWFmODk1MDAxN2QwNDdkZiIsImlhdCI6MTYxMTYwNzQwNywiZXhwIjoxNjExNjkzODA3fQ.rjSpg9yn-Re1MJeaYTxPgq5bqHuS_QZ56odN8Z0c750
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              payload:
+                type: string
+                example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRzeWJ1bGtvLmFydGVtQGdtYWlsLmNvbSIsInVzZXJJZCI6IjYwMGYyYTZiZWFmODk1MDAxN2QwNDdkZiIsImlhdCI6MTYxMTYwNzQwNywiZXhwIjoxNjExNjkzODA3fQ.rjSpg9yn-Re1MJeaYTxPgq5bqHuS_QZ56odN8Z0c750
+
+    EmailSend:
+      description: Email Send
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              payload:
+                type: string
+                example: Email send
 
     Save:
       description: Save

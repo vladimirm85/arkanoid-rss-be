@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { v4 as uuid } from 'uuid';
 import { UserModel, UserInterface, VerKeyModel, VerKeyInterface } from '../../models';
 import { userRegisterSchema, dataValidation } from '../../validation';
-import { errorHandler, mailSend } from '../../utils';
+import { errorHandler, mailSend, successHandler } from '../../utils';
 
 export const register = async (req: Request, res: Response): Promise<void | Response> => {
   const { email, password } = req.body;
@@ -51,6 +51,8 @@ export const register = async (req: Request, res: Response): Promise<void | Resp
     if (!isMailSend) {
       return errorHandler(res, 500, 'register: a verification letter was not sent');
     }
+
+    successHandler(res, 200, 'Email send');
   } catch (e: unknown) {
     if (!(e instanceof Error)) throw e;
 
