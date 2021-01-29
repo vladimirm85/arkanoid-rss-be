@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { v4 as uuid } from 'uuid';
 import { UserModel, UserInterface, VerKeyModel, VerKeyInterface } from '../../models';
 import { userRegisterSchema, dataValidation } from '../../validation';
-import { errorHandler, successHandler, mailSend } from '../../utils';
+import { errorHandler, mailSend } from '../../utils';
 
 export const register = async (req: Request, res: Response): Promise<void | Response> => {
   const { email, password } = req.body;
@@ -20,15 +20,6 @@ export const register = async (req: Request, res: Response): Promise<void | Resp
     const isUserValid = dataValidation(res, userRegisterSchema, req.body);
     if (!isUserValid) {
       return;
-    }
-
-    const userValidateCandidate = userRegisterSchema.validate(req.body);
-    if (userValidateCandidate.error) {
-      return errorHandler(
-        res,
-        409,
-        `${userValidateCandidate.error.details[0].path[0]} validation error`
-      );
     }
 
     const userData: UserInterface = {
@@ -50,8 +41,6 @@ export const register = async (req: Request, res: Response): Promise<void | Resp
 
     await user.save();
     await verificationKey.save();
-
-    successHandler(res, 201, user);
 
     const isMailSend = await mailSend(
       path,

@@ -109,6 +109,27 @@ paths:
         - Save
 
 
+  /auth/register:
+    post:
+      summary: Takes Registration data from the body and send verification email
+      operationId: register
+      requestBody:
+        $ref: '#/components/requestBodies/RegistrationData'
+      responses:
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                oneOf:
+                 - $ref: '#/components/schemas/DataValidationFail'
+                 - $ref: '#/components/schemas/EmailIsTaken'
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Auth
+
+
   /auth/login:
     post:
       summary: Takes Login data from the body and returns Bearer token
@@ -118,12 +139,16 @@ paths:
       responses:
         '201':
           $ref: '#/components/responses/BearerToken'
-        '401':
-          $ref: '#/components/responses/EmailNotVerified'
         '404':
           $ref: '#/components/responses/UserNotFound'
         '409':
-          $ref: '#/components/responses/ValidationError'
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/DataValidationFail'
+                  - $ref: '#/components/schemas/EmailVerificationFail'
         '422':
           $ref: '#/components/responses/AccessDenied'
         '500':
@@ -192,6 +217,36 @@ components:
           type: string
           format: date
           example: 2021-01-17T19:21:10.492+00:00
+
+    DataValidationFail:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: ${fieldName} validation error
+
+    EmailVerificationFail:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: email ${email} is not verified
+
+    EmailIsTaken:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Sorry, email ${email} has already been taken!
 
 
   securitySchemes:

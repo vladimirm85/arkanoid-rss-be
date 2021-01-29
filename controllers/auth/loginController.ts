@@ -21,7 +21,7 @@ export const login = async (req: Request, res: Response): Promise<void | Respons
 
     const verificationKey = await VerKeyModel.findOne({ userId: userCandidate.id });
     if (!(await verificationKey.verifiedAt)) {
-      return errorHandler(res, 401, `email ${email} is not verified`);
+      return errorHandler(res, 409, `email ${email} is not verified`);
     }
 
     const isPassMatch = await bcryptjs.compare(password, userCandidate.password);
