@@ -111,21 +111,65 @@ paths:
 
   /auth/login:
     post:
-      summary: Takes Login data from the body and returns
+      summary: Takes Login data from the body and returns Bearer token
       operationId: login
       requestBody:
         $ref: '#/components/requestBodies/LoginData'
       responses:
-        '200':
-          $ref: '#/components/responses/Save'
+        '201':
+          $ref: '#/components/responses/BearerToken'
+        '401':
+          $ref: '#/components/responses/EmailNotVerified'
         '404':
           $ref: '#/components/responses/UserNotFound'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/ValidationError'
+        '422':
+          $ref: '#/components/responses/AccessDenied'
         '500':
           $ref: '#/components/responses/Error'
       tags:
         - Auth
+
+
+  /auth/google:
+    get:
+      summary: Redirect to google login page then redirect to FRONT_BASE_URL/social-login-success with token in parametrs
+      operationId: loginGoogle
+      responses:
+        '302':
+          description: Found
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Auth
+
+
+  /auth/github:
+    get:
+      summary: Redirect to github login page then redirect to FRONT_BASE_URL/social-login-success with token in parametrs
+      operationId: loginGithub
+      responses:
+        '302':
+          description: Found
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Auth
+
+
+  /auth/facebook:
+    get:
+      summary: Redirect to facebook login page then redirect to FRONT_BASE_URL/social-login-success with token in parametrs
+      operationId: loginFacebook
+      responses:
+        '302':
+          description: Found
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Auth
+
 
 
 components:
@@ -159,6 +203,14 @@ components:
 
 
   responses:
+
+    BearerToken:
+      description: Bearer Token
+      content:
+        application/json:
+          schema:
+            type: string
+            example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRzeWJ1bGtvLmFydGVtQGdtYWlsLmNvbSIsInVzZXJJZCI6IjYwMGYyYTZiZWFmODk1MDAxN2QwNDdkZiIsImlhdCI6MTYxMTYwNzQwNywiZXhwIjoxNjExNjkzODA3fQ.rjSpg9yn-Re1MJeaYTxPgq5bqHuS_QZ56odN8Z0c750
 
     Save:
       description: Save
@@ -228,7 +280,7 @@ components:
                 example: false
               message:
                 type: string
-                example: No such user with email - email
+                example: No such user with email - ${email}
 
     EmailNotVerified:
       description: Email not verified
@@ -243,6 +295,20 @@ components:
               message:
                 type: string
                 example: email ${email} is not verified
+
+    AccessDenied:
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Email or password is incorrect
 
     Error:
       description: Error
@@ -270,7 +336,7 @@ components:
                 example: false
               message:
                 type: string
-                example: NameOfTheField validation error
+                example: ${fieldName} validation error
 
     Unauthorized:
       description: Unauthorized
