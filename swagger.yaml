@@ -12,62 +12,98 @@ servers:
     description: Production server
 
 
+
 paths:
 
+
   /saves:
+
     get:
       summary: Takes user ID from token and returns all user saves
+      operationId: getAllSaves
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: Array of Save.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  payload:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Save'
+          $ref: '#/components/responses/Saves'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '500':
-          description: error
+          $ref: '#/components/responses/Error'
 
-  /saves/{id}:
-    get:
-      summary: Takes user ID from token and returns user save by ID
+    post:
+      summary: Takes user ID from the token, Save data from the body and creates user Save
+      operationId: createSave
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/SaveData'
+      responses:
+        '201':
+          $ref: '#/components/responses/Save'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/Error'
+
+    put:
+      summary: Takes user ID from the token, Save ID from the parameters, Save data from the body and creates user Save
+      operationId: updateSave
       security:
         - bearerAuth: []
       parameters:
-        - name: id
-          in: path
-          description: Save ID
-          required: true
-          schema:
-            type: string
-            example: 60048e26a8486d510406b33f
+        - $ref: '#/components/parameters/SaveId'
+      requestBody:
+        $ref: '#/components/requestBodies/SaveData'
       responses:
         '200':
-          description: Save.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  payload:
-                    $ref: '#/components/schemas/Save'
+          $ref: '#/components/responses/Save'
+        '404':
+          $ref: '#/components/responses/SaveNotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '500':
-          description: error
+          $ref: '#/components/responses/Error'
+
+  /saves/{id}:
+
+    get:
+      summary: Takes user ID from the token, Save ID from the parameters and returns user Save
+      operationId: getSaveById
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/SaveId'
+      responses:
+        '200':
+          $ref: '#/components/responses/Save'
+        '404':
+          $ref: '#/components/responses/SaveNotFound'
+        '500':
+          $ref: '#/components/responses/Error'
+
+    delete:
+      summary: Takes user ID from the token, Save ID from the parameters and delete the Save
+      operationId: deleteSave
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/SaveId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SaveDeleted'
+        '404':
+          $ref: '#/components/responses/SaveNotFound'
+        '500':
+          $ref: '#/components/responses/Error'
+
+
 
 components:
+
+
   schemas:
+
     Save:
       type: object
       properties:
@@ -88,3 +124,105 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
+
+  responses:
+
+    Save:
+      description: Save
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              payload:
+                $ref: '#/components/schemas/Save'
+
+    Saves:
+      description: Array of Save.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              payload:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Save'
+
+    SaveDeleted:
+      description: Save Deleted
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              payload:
+                type: string
+                example: 'Deleted'
+
+    SaveNotFound:
+      description: No such save
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: No such save
+
+    Error:
+      description: Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Some Error
+
+    Unauthorized:
+      description: Unauthorized
+
+
+  requestBodies:
+
+    SaveData:
+      description: Save data
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              saveData:
+                type: object
+
+
+  parameters:
+
+    SaveId:
+      name: id
+      in: path
+      description: Save ID
+      required: true
+      schema:
+        type: string
+        example: 60048e26a8486d510406b33f

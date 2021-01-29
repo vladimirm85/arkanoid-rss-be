@@ -22,6 +22,10 @@ export const getSaveById = async (req: Request, res: Response): Promise<Response
 
   try {
     const save = await SaveModel.find({ _id: id, userId: user._id });
+    if (!save) {
+      return errorHandler(res, 404, 'No such save');
+    }
+
     successHandler(res, 200, save);
   } catch (e: unknown) {
     if (!(e instanceof Error)) throw e;
@@ -69,7 +73,7 @@ export const updateSave = async (req: Request, res: Response): Promise<Response>
       return errorHandler(res, 404, 'No such save');
     }
 
-    successHandler(res, 201, save);
+    successHandler(res, 200, save);
   } catch (e: unknown) {
     if (!(e instanceof Error)) throw e;
 
