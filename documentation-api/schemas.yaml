@@ -1,0 +1,17 @@
+components:
+  schemas:
+    Save:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 60048e26a8486d510406b33f
+        saveData:
+          type: object
+        userId:
+          type: string
+          example: 600485e573f5ce001796f558
+        createdAt:
+          type: string
+          format: date
+          example: 2021-01-17T19:21:10.492+00:00

@@ -30,6 +30,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/Error'
+      tags:
+        - Save
 
     post:
       summary: Takes user ID from the token, Save data from the body and creates user Save
@@ -45,6 +47,28 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/Error'
+      tags:
+        - Save
+
+
+  /saves/{id}:
+
+    get:
+      summary: Takes user ID from the token, Save ID from the parameters and returns user Save
+      operationId: getSaveById
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/SaveId'
+      responses:
+        '200':
+          $ref: '#/components/responses/Save'
+        '404':
+          $ref: '#/components/responses/SaveNotFound'
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Save
 
     put:
       summary: Takes user ID from the token, Save ID from the parameters, Save data from the body and creates user Save
@@ -64,23 +88,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/Error'
-
-  /saves/{id}:
-
-    get:
-      summary: Takes user ID from the token, Save ID from the parameters and returns user Save
-      operationId: getSaveById
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/SaveId'
-      responses:
-        '200':
-          $ref: '#/components/responses/Save'
-        '404':
-          $ref: '#/components/responses/SaveNotFound'
-        '500':
-          $ref: '#/components/responses/Error'
+      tags:
+        - Save
 
     delete:
       summary: Takes user ID from the token, Save ID from the parameters and delete the Save
@@ -96,30 +105,34 @@ paths:
           $ref: '#/components/responses/SaveNotFound'
         '500':
           $ref: '#/components/responses/Error'
+      tags:
+        - Save
 
+
+  /auth/login:
+    post:
+      summary: Takes Login data from the body and returns
+      operationId: login
+      requestBody:
+        $ref: '#/components/requestBodies/LoginData'
+      responses:
+        '200':
+          $ref: '#/components/responses/Save'
+        '404':
+          $ref: '#/components/responses/SaveNotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Save
 
 
 components:
 
 
-  schemas:
-
-    Save:
-      type: object
-      properties:
-        _id:
-          type: string
-          example: 60048e26a8486d510406b33f
-        saveData:
-          type: object
-        userId:
-          type: string
-          example: 600485e573f5ce001796f558
-        createdAt:
-          type: string
-          format: date
-          example: 2021-01-17T19:21:10.492+00:00
   securitySchemes:
+
     bearerAuth:
       type: http
       scheme: bearer
@@ -139,7 +152,7 @@ components:
                 type: boolean
                 example: true
               payload:
-                $ref: '#/components/schemas/Save'
+                $ref: 'schemas.yaml'
 
     Saves:
       description: Array of Save.
@@ -154,7 +167,7 @@ components:
               payload:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Save'
+                  $ref: 'schemas.yaml'
 
     SaveDeleted:
       description: Save Deleted
@@ -171,7 +184,7 @@ components:
                 example: 'Deleted'
 
     SaveNotFound:
-      description: No such save
+      description: Save not found
       content:
         application/json:
           schema:
@@ -183,6 +196,34 @@ components:
               message:
                 type: string
                 example: No such save
+
+    UserNotFound:
+      description: User not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: No such user with email - email
+
+    EmailNotVerified:
+      description: Email not verified
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: email is not verified
 
     Error:
       description: Error
@@ -196,7 +237,21 @@ components:
                 example: false
               message:
                 type: string
-                example: Some Error
+                example: Error message
+
+    ValidationError:
+      description: Validation Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: NameOfTheField validation error
 
     Unauthorized:
       description: Unauthorized
@@ -215,6 +270,38 @@ components:
               saveData:
                 type: object
 
+    LoginData:
+      description: Login Data
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: test@test.com
+              password:
+                type: string
+                example: 123f56W2178w
+
+    RegistrationData:
+      description: Registration Data
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: test@test.com
+              password:
+                type: string
+                example: 123f56W2178w
+              repeatPassword:
+                type: string
+                example: 123f56W2178w
 
   parameters:
 

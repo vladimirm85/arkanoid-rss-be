@@ -18,7 +18,7 @@ import {
   githubRouteProtector,
   facebookRouteProtector,
 } from './middlewares';
-const swaggerDocs = YAML.load('./swagger.yaml');
+const swaggerDocs = YAML.load('./documentation-api/swagger.yaml');
 
 export const app = express();
 

@@ -16,7 +16,7 @@ export const login = async (req: Request, res: Response): Promise<void | Respons
 
     const userCandidate = await UserModel.findOne({ email });
     if (!userCandidate) {
-      return errorHandler(res, 401, `No such user with email: ${email}`);
+      return errorHandler(res, 404, `No such user with email: ${email}`);
     }
 
     const verificationKey = await VerKeyModel.findOne({ userId: userCandidate.id });
