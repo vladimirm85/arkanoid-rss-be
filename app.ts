@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as swaggerUi from 'swagger-ui-express';
+import * as swaggerJsdoc from 'swagger-jsdoc';
 import * as YAML from 'yamljs';
 import * as passport from 'passport';
 import * as logger from 'morgan';
@@ -24,6 +25,12 @@ export const app = express();
 
 const { MONGO_USERNAME, MONGO_PASSWORD, MONGO_HOST } = process.env;
 
+const options = {
+  apis: ['./documentation-api/**/*.yaml'],
+};
+
+const swaggerSpec = swaggerJsdoc(options);
+
 const url = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/arkanoid?retryWrites=true&w=majority`;
 
 mongoose.connect(url, {
@@ -32,11 +39,7 @@ mongoose.connect(url, {
   useUnifiedTopology: true,
 });
 
-app.use(
-  '/api-docs',
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerDocs, { swaggerOptions: { apis: ['./documentation-api/**/*.yaml'] } })
-);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(passport.initialize());
 jwtRouteProtector(passport);
