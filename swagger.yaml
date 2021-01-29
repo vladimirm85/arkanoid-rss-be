@@ -10,10 +10,13 @@ info:
 servers:
   - url: https://arkanoid-rss-be.herokuapp.com
     description: Production server
+
+
 paths:
+
   /saves:
     get:
-      summary: Get all saves
+      summary: Takes user ID from token and returns all user saves
       security:
         - bearerAuth: []
       responses:
@@ -33,6 +36,36 @@ paths:
                       $ref: '#/components/schemas/Save'
         '500':
           description: error
+
+  /saves/{id}:
+    get:
+      summary: Takes user ID from token and returns user save by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Save ID
+          required: true
+          schema:
+            type: string
+            example: 60048e26a8486d510406b33f
+      responses:
+        '200':
+          description: Save.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  payload:
+                    $ref: '#/components/schemas/Save'
+        '500':
+          description: error
+
 components:
   schemas:
     Save:
