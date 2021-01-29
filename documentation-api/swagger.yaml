@@ -130,15 +130,6 @@ paths:
 
 components:
 
-
-  securitySchemes:
-
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-
-
   responses:
 
     Save:

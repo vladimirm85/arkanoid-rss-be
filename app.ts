@@ -32,7 +32,11 @@ mongoose.connect(url, {
   useUnifiedTopology: true,
 });
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocs, { swaggerOptions: { apis: ['./documentation-api/**/*.yaml'] } })
+);
 
 app.use(passport.initialize());
 jwtRouteProtector(passport);
