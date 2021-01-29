@@ -1,18 +1,3 @@
-openapi: 3.0.0
-info:
-  title: Arkanoid API
-  description: API for Arkanoid game
-  version: 1.0.0
-  contact:
-    name: Vladimir Mazhirin
-    url: https://github.com/vladimirm85
-    email: vladimirm85@gmail.com
-servers:
-  - url: https://arkanoid-rss-be.herokuapp.com
-    description: Production server
-
-
-
 paths:
 
 

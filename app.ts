@@ -25,7 +25,26 @@ export const app = express();
 
 const { MONGO_USERNAME, MONGO_PASSWORD, MONGO_HOST } = process.env;
 
+const swaggerDefinition = {
+  openapi: '3.0.0',
+  info: {
+    title: 'Arkanoid API',
+    version: '1.0.0',
+    description: 'API for Arkanoid game',
+  },
+  contact: {
+    name: 'Vladimir Mazhirin',
+    url: 'https://github.com/vladimirm85',
+    email: 'vladimirm85@gmail.com',
+  },
+  servers: {
+    description: ' Production server',
+    url: 'https://arkanoid-rss-be.herokuapp.com',
+  },
+};
+
 const options = {
+  swaggerDefinition,
   apis: ['./documentation-api/**/*.yaml'],
 };
 
