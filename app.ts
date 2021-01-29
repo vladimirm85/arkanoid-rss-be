@@ -1,7 +1,6 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as swaggerUi from 'swagger-ui-express';
-import * as swaggerJsdoc from 'swagger-jsdoc';
 import * as YAML from 'yamljs';
 import * as passport from 'passport';
 import * as logger from 'morgan';
@@ -25,31 +24,6 @@ export const app = express();
 
 const { MONGO_USERNAME, MONGO_PASSWORD, MONGO_HOST } = process.env;
 
-const swaggerDefinition = {
-  openapi: '3.0.0',
-  info: {
-    title: 'Arkanoid API',
-    version: '1.0.0',
-    description: 'API for Arkanoid game',
-  },
-  contact: {
-    name: 'Vladimir Mazhirin',
-    url: 'https://github.com/vladimirm85',
-    email: 'vladimirm85@gmail.com',
-  },
-  servers: {
-    description: ' Production server',
-    url: 'https://arkanoid-rss-be.herokuapp.com',
-  },
-};
-
-const options = {
-  swaggerDefinition,
-  apis: ['./documentation-api/**/*.yaml'],
-};
-
-const swaggerSpec = swaggerJsdoc(options);
-
 const url = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/arkanoid?retryWrites=true&w=majority`;
 
 mongoose.connect(url, {
@@ -58,7 +32,7 @@ mongoose.connect(url, {
   useUnifiedTopology: true,
 });
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(passport.initialize());
 jwtRouteProtector(passport);

@@ -1,3 +1,18 @@
+openapi: 3.0.0
+info:
+  title: Arkanoid API
+  description: API for Arkanoid game
+  version: 1.0.0
+  contact:
+    name: Vladimir Mazhirin
+    url: https://github.com/vladimirm85
+    email: vladimirm85@gmail.com
+servers:
+  - url: https://arkanoid-rss-be.herokuapp.com
+    description: Production server
+
+
+
 paths:
 
 
@@ -104,16 +119,44 @@ paths:
         '200':
           $ref: '#/components/responses/Save'
         '404':
-          $ref: '#/components/responses/SaveNotFound'
+          $ref: '#/components/responses/UserNotFound'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/Error'
       tags:
-        - Save
+        - Auth
 
 
 components:
+
+
+  schemas:
+
+    Save:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 60048e26a8486d510406b33f
+        saveData:
+          type: object
+        userId:
+          type: string
+          example: 600485e573f5ce001796f558
+        createdAt:
+          type: string
+          format: date
+          example: 2021-01-17T19:21:10.492+00:00
+
+
+  securitySchemes:
+
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
 
   responses:
 
@@ -128,7 +171,7 @@ components:
                 type: boolean
                 example: true
               payload:
-                $ref: 'schemas.yaml'
+                $ref: '#/components/schemas/Save'
 
     Saves:
       description: Array of Save.
@@ -143,7 +186,7 @@ components:
               payload:
                 type: array
                 items:
-                  $ref: 'schemas.yaml'
+                  $ref: '#/components/schemas/Save'
 
     SaveDeleted:
       description: Save Deleted
@@ -199,7 +242,7 @@ components:
                 example: false
               message:
                 type: string
-                example: email is not verified
+                example: email ${email} is not verified
 
     Error:
       description: Error
