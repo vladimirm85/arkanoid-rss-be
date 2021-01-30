@@ -318,6 +318,46 @@ paths:
         - Save
 
 
+  /levels-stats/:
+
+    get:
+      summary: Takes user ID from the token, Level Limit ForUser from the parameters and returns Levels stats array
+      operationId: getAllLevelsStats
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LevelQuery'
+        - $ref: '#/components/parameters/LimitQuery'
+        - $ref: '#/components/parameters/ForUserQuery'
+      responses:
+        '200':
+          $ref: '#/components/responses/LevelsStats'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Level stats
+
+    post:
+      summary: Takes user ID from the token, Level Score the body and returns LevelStat
+      operationId: createLevelStat
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/LevelStat'
+      responses:
+        '200':
+          $ref: '#/components/responses/LevelStat'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/UserNotFound'
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Level stats
+
 
 components:
 
@@ -358,6 +398,29 @@ components:
         avatar:
           type: string
           example: data:image/jpeg;base64,/9j/4RCyRXhpZgAATU0AKgAAAAgAAodpAAQAAAABAAAIMuo
+        createdAt:
+          type: string
+          format: date
+          example: 2021-01-17T19:21:10.492+00:00
+
+    LevelStat:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 60048e26a8486d510406b33f
+        level:
+          type: integer
+          example: 1
+        score:
+          type: integer
+          example: 1234
+        userId:
+          type: string
+          example: 600f3305eaf8950017d047e2
+        nickname:
+          type: string
+          example: nickname
         createdAt:
           type: string
           format: date
@@ -484,6 +547,34 @@ components:
                 items:
                   $ref: '#/components/schemas/Save'
 
+    LevelStat:
+      description: Level Stat
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              payload:
+                $ref: '#/components/schemas/LevelStat'
+
+    LevelsStats:
+      description: Array of Levels Stats
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              payload:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LevelStat'
+
     SaveDeleted:
       description: Save Deleted
       content:
@@ -524,7 +615,7 @@ components:
                 example: false
               message:
                 type: string
-                example: No such user with email - ${email}
+                example: No such user
 
     RecoveryPasswordKey:
       description: Recovery password key created
@@ -632,17 +723,6 @@ components:
 
   requestBodies:
 
-    SaveData:
-      description: Save data
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              saveData:
-                type: object
-
     LoginData:
       description: Login Data
       required: true
@@ -703,6 +783,32 @@ components:
                 type: string
                 example: 123f56W2178w
 
+    SaveData:
+      description: Save data
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              saveData:
+                type: object
+
+    LevelStat:
+      description: Level number and Score
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              level:
+                type: integer
+                example: 1
+              score:
+                type: integer
+                example: 1234
+
   parameters:
 
     SaveId:
@@ -713,6 +819,30 @@ components:
       schema:
         type: string
         example: 60048e26a8486d510406b33f
+
+    LevelQuery:
+        in: query
+        name: level
+        schema:
+          type: integer
+          example: 1
+        description: The Level number
+
+    LimitQuery:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        example: 11
+      description: The numbers of items to return
+
+    ForUserQuery:
+      in: query
+      name: forUser
+      schema:
+        type: integer
+        example: 0
+      description: If 1 = true, returns only current user stats, if 0 = false, returns all stats
 
     VerificationKey:
       name: key
