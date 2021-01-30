@@ -15,8 +15,217 @@ servers:
 
 paths:
 
+  /account/:
+    get:
+      summary: Takes User ID from token and returns User
+      operationId: getAccount
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/User'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Account
 
-  /saves:
+
+  /account/verify/{key}:
+    post:
+      summary: Takes Verification key from the parametrs and returns Bearer token
+      operationId: verify
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/VerificationKey'
+      responses:
+        '200':
+          $ref: '#/components/responses/BearerToken'
+        '404':
+          $ref: '#/components/responses/VerificationKeyNotFound'
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Account
+
+
+  /account/forgot-password:
+    post:
+      summary: Takes Email from the body and send Password recovery email
+      operationId: forgotPassword
+      requestBody:
+        $ref: '#/components/requestBodies/Email'
+      responses:
+        '201':
+          $ref: '#/components/responses/RecoveryPasswordKey'
+        '404':
+          $ref: '#/components/responses/UserNotFound'
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Account
+
+
+  /account/restore-password/{key}:
+    post:
+      summary: Takes key from the parameters, password and repeatPassword from the body and returns Bearer token
+      operationId: restorePassword
+      parameters:
+        - $ref: '#/components/parameters/RecoveryPasswordKey'
+      requestBody:
+        $ref: '#/components/requestBodies/Passwords'
+      responses:
+        '201':
+          $ref: '#/components/responses/RecoveryPasswordKey'
+        '404':
+          $ref: '#/components/responses/UserNotFound'
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Account
+
+
+  /account/resend-verify:
+    post:
+      summary: Takes Email from the body and send verification email
+      operationId: resendVerifyLetter
+      requestBody:
+        $ref: '#/components/requestBodies/Email'
+      responses:
+        '200':
+          $ref: '#/components/responses/EmailSend'
+        '404':
+          $ref: '#/components/responses/UserNotFound'
+        '409':
+          $ref: '#/components/responses/VerificationKeyAlreadyVerified'
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Account
+
+
+  /account/set-avatar:
+    post:
+      summary: Takes User ID from the token, Avatar base 64 string from the body and returns User
+      operationId: setAvatar
+      requestBody:
+        description: Base 64 string
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  example: data:image/jpeg;base64,/9j/4RshRXhpZgAATU0AKgAAAAgABwESAAMAAAABAAEAAAEaAAUAAAABAAAAYgEbAAUAAAABAAAAagEoAAMAAAABAAIAAAExAAIAAAAcAAAAcgEyAAIAAAAUAAAAjodpAAQAAAABAAAApAAAANAAAAEsAAAAAQAAASwAAAABQWRvYmUgUGhvdG9zaG9wIENTNCBXaW5kb3dzADIwMTE6MDg6MjYgMDA6NDM6MzUAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAACqKADAAQAAAABAAAEAAAAAAAAAAAGAQMAAwAAAAEABgAAARoABQAAAAEAAAEeARsABQAAAAEAAAEmASgAAwAAAAEAAgAAAgEABAAAAAEAAAEuAgIABAAAAAEAABnrAAAAAAAAAEgAAAABAAAASAAAAAH/2P/gABBKRklGAAECAABIAEgAAP/tAAxBZG9iZV9DTQAB/+4ADkFkb2JlAGSAAAAAAf
+      responses:
+        '201':
+          $ref: '#/components/responses/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/UserNotFound'
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Account
+
+
+  /auth/register:
+    post:
+      summary: Takes Registration data from the body and send verification email
+      operationId: register
+      requestBody:
+        $ref: '#/components/requestBodies/RegistrationData'
+      responses:
+        '200':
+          $ref: '#/components/responses/EmailSend'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/DataValidationFail'
+                  - $ref: '#/components/schemas/EmailIsTaken'
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Auth
+
+
+  /auth/login:
+    post:
+      summary: Takes Login data from the body and returns Bearer token
+      operationId: login
+      requestBody:
+        $ref: '#/components/requestBodies/LoginData'
+      responses:
+        '201':
+          $ref: '#/components/responses/BearerToken'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Unauthorized'
+                  - $ref: '#/components/schemas/EmailVerificationFail'
+        '404':
+          $ref: '#/components/responses/UserNotFound'
+        '409':
+          $ref: '#/components/responses/DataValidationFailed'
+        '422':
+          $ref: '#/components/responses/AccessFailed'
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Auth
+
+
+  /auth/google:
+    get:
+      summary: Redirect to google login page then redirect to FRONT_BASE_URL/social-login-success with token in parametrs
+      operationId: loginGoogle
+      responses:
+        '302':
+          description: Found
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Auth
+
+
+  /auth/github:
+    get:
+      summary: Redirect to github login page then redirect to FRONT_BASE_URL/social-login-success with token in parametrs
+      operationId: loginGithub
+      responses:
+        '302':
+          description: Found
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Auth
+
+
+  /auth/facebook:
+    get:
+      summary: Redirect to facebook login page then redirect to FRONT_BASE_URL/social-login-success with token in parametrs
+      operationId: loginFacebook
+      responses:
+        '302':
+          description: Found
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Auth
+
+
+  /saves/:
 
     get:
       summary: Takes user ID from token and returns all user saves
@@ -109,97 +318,6 @@ paths:
         - Save
 
 
-  /auth/register:
-    post:
-      summary: Takes Registration data from the body and send verification email
-      operationId: register
-      requestBody:
-        $ref: '#/components/requestBodies/RegistrationData'
-      responses:
-        '200':
-          $ref: '#/components/responses/EmailSend'
-        '409':
-          description: Conflict
-          content:
-            application/json:
-              schema:
-                oneOf:
-                 - $ref: '#/components/schemas/DataValidationFail'
-                 - $ref: '#/components/schemas/EmailIsTaken'
-        '500':
-          $ref: '#/components/responses/Error'
-      tags:
-        - Auth
-
-
-  /auth/login:
-    post:
-      summary: Takes Login data from the body and returns Bearer token
-      operationId: login
-      requestBody:
-        $ref: '#/components/requestBodies/LoginData'
-      responses:
-        '201':
-          $ref: '#/components/responses/BearerToken'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/UserNotFound'
-        '409':
-          description: Conflict
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DataValidationFail'
-                  - $ref: '#/components/schemas/EmailVerificationFail'
-        '422':
-          $ref: '#/components/responses/AccessDenied'
-        '500':
-          $ref: '#/components/responses/Error'
-      tags:
-        - Auth
-
-
-  /auth/google:
-    get:
-      summary: Redirect to google login page then redirect to FRONT_BASE_URL/social-login-success with token in parametrs
-      operationId: loginGoogle
-      responses:
-        '302':
-          description: Found
-        '500':
-          $ref: '#/components/responses/Error'
-      tags:
-        - Auth
-
-
-  /auth/github:
-    get:
-      summary: Redirect to github login page then redirect to FRONT_BASE_URL/social-login-success with token in parametrs
-      operationId: loginGithub
-      responses:
-        '302':
-          description: Found
-        '500':
-          $ref: '#/components/responses/Error'
-      tags:
-        - Auth
-
-
-  /auth/facebook:
-    get:
-      summary: Redirect to facebook login page then redirect to FRONT_BASE_URL/social-login-success with token in parametrs
-      operationId: loginFacebook
-      responses:
-        '302':
-          description: Found
-        '500':
-          $ref: '#/components/responses/Error'
-      tags:
-        - Auth
-
-
 
 components:
 
@@ -217,6 +335,29 @@ components:
         userId:
           type: string
           example: 600485e573f5ce001796f558
+        createdAt:
+          type: string
+          format: date
+          example: 2021-01-17T19:21:10.492+00:00
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 60048e26a8486d510406b33f
+        nickname:
+          type: string
+          example: nickname
+        password:
+          type: string
+          example: $2a$10$jbhoEnzG8EPWf7icxetGyOS/IQHClP6xslWq.6rELstxy.PMugiFq
+        totalScore:
+          type: number
+          example: 1209
+        avatar:
+          type: string
+          example: data:image/jpeg;base64,/9j/4RCyRXhpZgAATU0AKgAAAAgAAodpAAQAAAABAAAIMuo
         createdAt:
           type: string
           format: date
@@ -251,6 +392,17 @@ components:
         message:
           type: string
           example: Sorry, email ${email} has already been taken!
+
+
+    Unauthorized:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Unauthorized
 
 
   securitySchemes:
@@ -290,6 +442,19 @@ components:
               payload:
                 type: string
                 example: Email send
+
+    User:
+      description: User
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              payload:
+                $ref: '#/components/schemas/User'
 
     Save:
       description: Save
@@ -361,8 +526,22 @@ components:
                 type: string
                 example: No such user with email - ${email}
 
-    EmailNotVerified:
-      description: Email not verified
+    RecoveryPasswordKey:
+      description: Recovery password key created
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: recovery password key created
+
+    VerificationKeyNotFound:
+      description: Verification key not found
       content:
         application/json:
           schema:
@@ -373,7 +552,51 @@ components:
                 example: false
               message:
                 type: string
-                example: email ${email} is not verified
+                example: verificationKey was not found in database
+
+    VerificationKeyAlreadyVerified:
+      description: Verification key already verified
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: email ${email} is already verified
+
+    AccessFailed:
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Email or password is incorrect
+
+
+    DataValidationFailed:
+      description: Data validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: ${fieldName} validation error
+
 
     AccessDenied:
       description: Access denied
@@ -387,7 +610,7 @@ components:
                 example: false
               message:
                 type: string
-                example: Email or password is incorrect
+                example: Access denied
 
     Error:
       description: Error
@@ -402,20 +625,6 @@ components:
               message:
                 type: string
                 example: Error message
-
-    ValidationError:
-      description: Validation Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              success:
-                type: boolean
-                example: false
-              message:
-                type: string
-                example: ${fieldName} validation error
 
     Unauthorized:
       description: Unauthorized
@@ -467,6 +676,33 @@ components:
                 type: string
                 example: 123f56W2178w
 
+    Email:
+      description: Email
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: test@test.com
+
+    Passwords:
+      description: Password and repeatPassword
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              password:
+                type: string
+                example: 123f56W2178w
+              repeatPassword:
+                type: string
+                example: 123f56W2178w
+
   parameters:
 
     SaveId:
@@ -477,3 +713,21 @@ components:
       schema:
         type: string
         example: 60048e26a8486d510406b33f
+
+    VerificationKey:
+      name: key
+      in: path
+      description: Verification key hash
+      required: true
+      schema:
+        type: string
+        example: 36e212c1-c391-46f8-87c8-5e4aa5548f82
+
+    RecoveryPasswordKey:
+      name: key
+      in: path
+      description: Recovery password key hash
+      required: true
+      schema:
+        type: string
+        example: 36e212c1-c391-46f8-87c8-5e4aa5548f82

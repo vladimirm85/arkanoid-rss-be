@@ -23,7 +23,7 @@ export const resendVerifyLetter = async (req: Request, res: Response): Promise<R
       return errorHandler(res, 404, `No such verification key`);
     }
     if (await verificationKeyCandidate.verifiedAt) {
-      return errorHandler(res, 401, `email ${email} is already verified`);
+      return errorHandler(res, 409, `email ${email} is already verified`);
     }
 
     verificationKeyCandidate.remove();

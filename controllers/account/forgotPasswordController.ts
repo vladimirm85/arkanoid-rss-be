@@ -23,7 +23,9 @@ export const forgotPassword = async (req: Request, res: Response): Promise<Respo
     };
 
     const recoveryPasswordKey = await RecoveryPasswordKeyModel.create(recoveryPasswordKeyData);
-
+    if (!recoveryPasswordKey) {
+      return errorHandler(res, 500, 'recovery password key was not created');
+    }
     await recoveryPasswordKey.save();
 
     successHandler(res, 201, 'recovery password key created');
