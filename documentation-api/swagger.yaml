@@ -36,8 +36,6 @@ paths:
     post:
       summary: Takes verification key hash from the parametrs and returns bearer token
       operationId: verify
-      security:
-        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/VerificationKey'
       responses:
@@ -110,6 +108,8 @@ paths:
     post:
       summary: Takes user id from the token, avatar base 64 string from the body, updates the user data, and returns tehe user account
       operationId: setAvatar
+      security:
+        - bearerAuth: []
       requestBody:
         description: Base 64 string
         required: true
