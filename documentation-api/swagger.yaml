@@ -1,15 +1,15 @@
 openapi: 3.0.0
 info:
-  title: Arkanoid API
-  description: API for Arkanoid game
+  title: Arkanoid Back-end API
+  description: Back-end API for Arkanoid game
   version: 1.0.0
   contact:
     name: Vladimir Mazhirin
     url: https://github.com/vladimirm85
     email: vladimirm85@gmail.com
 servers:
-  - url: https://arkanoid-rss-be.herokuapp.com
-    description: Production server
+  - description: Production server
+    url: https://arkanoid-rss-be.herokuapp.com
 
 
 
@@ -17,7 +17,7 @@ paths:
 
   /account/:
     get:
-      summary: Takes User ID from token and returns User
+      summary: Takes user id from the token and returns user account
       operationId: getAccount
       security:
         - bearerAuth: []
@@ -29,12 +29,12 @@ paths:
         '500':
           $ref: '#/components/responses/Error'
       tags:
-        - Account
+        - User account
 
 
   /account/verify/{key}:
     post:
-      summary: Takes Verification key from the parametrs and returns Bearer token
+      summary: Takes verification key hash from the parametrs and returns bearer token
       operationId: verify
       security:
         - bearerAuth: []
@@ -48,12 +48,12 @@ paths:
         '500':
           $ref: '#/components/responses/Error'
       tags:
-        - Account
+        - User account
 
 
   /account/forgot-password:
     post:
-      summary: Takes Email from the body and send Password recovery email
+      summary: Takes email from the body and send password recovery email
       operationId: forgotPassword
       requestBody:
         $ref: '#/components/requestBodies/Email'
@@ -65,12 +65,12 @@ paths:
         '500':
           $ref: '#/components/responses/Error'
       tags:
-        - Account
+        - User account
 
 
   /account/restore-password/{key}:
     post:
-      summary: Takes key from the parameters, password and repeatPassword from the body and returns Bearer token
+      summary: Takes recovery password key hash from the parameters, password and repeatPassword from the body, updates the user data, and returns the bearer token
       operationId: restorePassword
       parameters:
         - $ref: '#/components/parameters/RecoveryPasswordKey'
@@ -78,18 +78,18 @@ paths:
         $ref: '#/components/requestBodies/Passwords'
       responses:
         '201':
-          $ref: '#/components/responses/RecoveryPasswordKey'
+          $ref: '#/components/responses/BearerToken'
         '404':
           $ref: '#/components/responses/UserNotFound'
         '500':
           $ref: '#/components/responses/Error'
       tags:
-        - Account
+        - User account
 
 
   /account/resend-verify:
     post:
-      summary: Takes Email from the body and send verification email
+      summary: Takes email from the body and send verification email
       operationId: resendVerifyLetter
       requestBody:
         $ref: '#/components/requestBodies/Email'
@@ -103,12 +103,12 @@ paths:
         '500':
           $ref: '#/components/responses/Error'
       tags:
-        - Account
+        - User account
 
 
   /account/set-avatar:
     post:
-      summary: Takes User ID from the token, Avatar base 64 string from the body and returns User
+      summary: Takes user id from the token, avatar base 64 string from the body, updates the user data, and returns tehe user account
       operationId: setAvatar
       requestBody:
         description: Base 64 string
@@ -131,12 +131,12 @@ paths:
         '500':
           $ref: '#/components/responses/Error'
       tags:
-        - Account
+        - User account
 
 
   /auth/register:
     post:
-      summary: Takes Registration data from the body and send verification email
+      summary: Takes registration data from the body, creates the user and send verification email
       operationId: register
       requestBody:
         $ref: '#/components/requestBodies/RegistrationData'
@@ -173,7 +173,7 @@ paths:
 
   /auth/login:
     post:
-      summary: Takes Login data from the body and returns Bearer token
+      summary: Takes login data from the body and returns bearer token
       operationId: login
       requestBody:
         $ref: '#/components/requestBodies/LoginData'
@@ -216,7 +216,7 @@ paths:
 
   /auth/google:
     get:
-      summary: Redirect to google login page then redirect to FRONT_BASE_URL/social-login-success with token in parametrs
+      summary: Redirect to google login page then redirect to FRONT_BASE_URL/social-login-success with token in the parameters
       operationId: loginGoogle
       responses:
         '302':
@@ -229,7 +229,7 @@ paths:
 
   /auth/github:
     get:
-      summary: Redirect to github login page then redirect to FRONT_BASE_URL/social-login-success with token in parametrs
+      summary: Redirect to github login page then redirect to FRONT_BASE_URL/social-login-success with token in the parameters
       operationId: loginGithub
       responses:
         '302':
@@ -242,7 +242,7 @@ paths:
 
   /auth/facebook:
     get:
-      summary: Redirect to facebook login page then redirect to FRONT_BASE_URL/social-login-success with token in parametrs
+      summary: Redirect to facebook login page then redirect to FRONT_BASE_URL/social-login-success with token in the parameters
       operationId: loginFacebook
       responses:
         '302':
@@ -256,7 +256,7 @@ paths:
   /saves/:
 
     get:
-      summary: Takes user ID from token and returns all user saves
+      summary: Takes user id from the token and returns all user saves
       operationId: getAllSaves
       security:
         - bearerAuth: []
@@ -271,7 +271,7 @@ paths:
         - Save
 
     post:
-      summary: Takes user ID from the token, Save data from the body and creates user Save
+      summary: Takes user id from the token, saveData object from the body, creates user save and returns it
       operationId: createSave
       security:
         - bearerAuth: []
@@ -291,7 +291,7 @@ paths:
   /saves/{id}:
 
     get:
-      summary: Takes user ID from the token, Save ID from the parameters and returns user Save
+      summary: Takes user id from the token, saveId from the parameters and returns user save
       operationId: getSaveById
       security:
         - bearerAuth: []
@@ -308,7 +308,7 @@ paths:
         - Save
 
     put:
-      summary: Takes user ID from the token, Save ID from the parameters, Save data from the body and creates user Save
+      summary: Takes user id from the token, saveId from the parameters, saveData from the body, updates user save and returns it
       operationId: updateSave
       security:
         - bearerAuth: []
@@ -329,7 +329,7 @@ paths:
         - Save
 
     delete:
-      summary: Takes user ID from the token, Save ID from the parameters and delete the Save
+      summary: Takes user id from the token, saveId from the parameters and deletes the save
       operationId: deleteSave
       security:
         - bearerAuth: []
@@ -349,7 +349,7 @@ paths:
   /levels-stats/:
 
     get:
-      summary: Takes user ID from the token, Level Limit ForUser from the parameters and returns Levels stats array
+      summary: Takes user id from the token,  level, limit, forUser from the query parameters and returns levels stats array
       operationId: getAllLevelsStats
       security:
         - bearerAuth: []
@@ -368,7 +368,7 @@ paths:
         - Level stats
 
     post:
-      summary: Takes user ID from the token, Level Score the body and returns LevelStat
+      summary: Takes user id from the token, levelScore from the body, creates level stat and returns it
       operationId: createLevelStat
       security:
         - bearerAuth: []
@@ -390,7 +390,7 @@ paths:
   /total-score/:
 
     get:
-      summary: Takes Limit from the parameters and returns Total scores array
+      summary: Takes limit from the query parameters and returns total scores array
       operationId: getAllTotalScores
       security:
         - bearerAuth: []
@@ -407,7 +407,7 @@ paths:
         - Total score
 
     post:
-      summary: Takes user ID from the token, Total score from the body and returns Total score
+      summary: Takes user id from the token, totalScore from the body, creates or updates existing total score and returns it
       operationId: createTotalScore
       security:
         - bearerAuth: []
