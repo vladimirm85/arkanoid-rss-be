@@ -14,7 +14,7 @@ export const getAllTotalScores = async (req: Request, res: Response): Promise<Re
   } catch (e: unknown) {
     if (!(e instanceof Error)) throw e;
 
-    return errorHandler(res, 404, e.message);
+    return errorHandler(res, 500, e.message);
   }
 };
 

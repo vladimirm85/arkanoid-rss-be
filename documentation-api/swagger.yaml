@@ -149,8 +149,22 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/DataValidationFail'
-                  - $ref: '#/components/schemas/EmailIsTaken'
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: ${fieldName} validation error
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: Sorry, email ${email} has already been taken!
         '500':
           $ref: '#/components/responses/Error'
       tags:
@@ -172,8 +186,22 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/Unauthorized'
-                  - $ref: '#/components/schemas/EmailVerificationFail'
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: Unauthorized
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: email ${email} is not verified
         '404':
           $ref: '#/components/responses/UserNotFound'
         '409':
@@ -347,7 +375,7 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/LevelStat'
       responses:
-        '200':
+        '201':
           $ref: '#/components/responses/LevelStat'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -358,6 +386,44 @@ paths:
       tags:
         - Level stats
 
+
+  /total-score/:
+
+    get:
+      summary: Takes Limit from the parameters and returns Total scores array
+      operationId: getAllTotalScores
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LimitQuery'
+      responses:
+        '200':
+          $ref: '#/components/responses/TotalScores'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Total score
+
+    post:
+      summary: Takes user ID from the token, Total score from the body and returns Total score
+      operationId: createTotalScore
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/TotalScore'
+      responses:
+        '201':
+          $ref: '#/components/responses/LevelStat'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/UserNotFound'
+        '500':
+          $ref: '#/components/responses/Error'
+      tags:
+        - Total score
 
 components:
 
@@ -426,46 +492,25 @@ components:
           format: date
           example: 2021-01-17T19:21:10.492+00:00
 
-    DataValidationFail:
+    TotalScore:
       type: object
       properties:
-        success:
-          type: boolean
-          example: false
-        message:
+        _id:
           type: string
-          example: ${fieldName} validation error
-
-    EmailVerificationFail:
-      type: object
-      properties:
-        success:
-          type: boolean
-          example: false
-        message:
+          example: 60048e26a8486d510406b33f
+        totalScore:
+          type: integer
+          example: 1234
+        userId:
           type: string
-          example: email ${email} is not verified
-
-    EmailIsTaken:
-      type: object
-      properties:
-        success:
-          type: boolean
-          example: false
-        message:
+          example: 600f3305eaf8950017d047e2
+        nickname:
           type: string
-          example: Sorry, email ${email} has already been taken!
-
-
-    Unauthorized:
-      type: object
-      properties:
-        success:
-          type: boolean
-          example: false
-        message:
+          example: nickname
+        createdAt:
           type: string
-          example: Unauthorized
+          format: date
+          example: 2021-01-17T19:21:10.492+00:00
 
 
   securitySchemes:
@@ -574,6 +619,34 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/LevelStat'
+
+    TotalScore:
+      description: Total score
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              payload:
+                $ref: '#/components/schemas/TotalScore'
+
+    TotalScores:
+      description: Array of Total scores
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              payload:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TotalScore'
 
     SaveDeleted:
       description: Save Deleted
@@ -806,6 +879,18 @@ components:
                 type: integer
                 example: 1
               score:
+                type: integer
+                example: 1234
+
+    TotalScore:
+      description: Level number and Score
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              totalScore:
                 type: integer
                 example: 1234
 
